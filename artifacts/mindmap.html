@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Fundamentals — Interactive Mindmap</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafafa; overflow: hidden; }
+  #header { position: fixed; top: 0; left: 0; right: 0; padding: 12px 24px; background: white; border-bottom: 1px solid #eee; z-index: 10; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+  #header h1 { margin: 0; font-size: 18px; color: #222; }
+  #header .legend { display: inline-flex; gap: 14px; margin-left: 24px; font-size: 12px; color: #555; vertical-align: middle; }
+  .legend-pill { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+  #canvas { width: 100vw; height: 100vh; }
+  .node circle { cursor: pointer; stroke-width: 2px; transition: r 0.2s; }
+  .node circle:hover { stroke: #222; }
+  .node text { font-size: 11px; pointer-events: none; }
+  .link { fill: none; stroke: #ccc; stroke-width: 1.5px; }
+  #tooltip { position: absolute; max-width: 320px; background: white; border-radius: 6px; padding: 12px 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); font-size: 13px; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 100; }
+  #tooltip h4 { margin: 0 0 6px; font-size: 14px; color: #222; }
+  #tooltip .module-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; color: white; margin-bottom: 6px; }
+  #tooltip .detail { color: #444; line-height: 1.4; margin-bottom: 8px; }
+  #tooltip .pros, #tooltip .cons { margin-top: 6px; font-size: 12px; }
+  #tooltip .pros strong { color: #2e7d32; }
+  #tooltip .cons strong { color: #c62828; }
+  #tooltip ul { margin: 4px 0; padding-left: 18px; }
+  #cc-footer { position: fixed; bottom: 8px; right: 12px; font-size: 11px; color: #999; z-index: 5; background: rgba(255,255,255,0.85); padding: 4px 8px; border-radius: 4px; }
+  #cc-footer a { color: #999; text-decoration: none; }
+</style>
+</head>
+<body>
+<div id="header">
+  <h1>AI Fundamentals — Interactive Mindmap</h1>
+  <div class="legend">
+    <span class="legend-pill"><span class="legend-dot" style="background:#2196F3"></span>Foundations</span>
+    <span class="legend-pill"><span class="legend-dot" style="background:#4CAF50"></span>ML Methods</span>
+    <span class="legend-pill"><span class="legend-dot" style="background:#FF9800"></span>NLP</span>
+    <span class="legend-pill"><span class="legend-dot" style="background:#9C27B0"></span>Generative AI</span>
+  </div>
+</div>
+<svg id="canvas"></svg>
+<div id="tooltip"></div>
+<div id="cc-footer">© gmanch94 · CC-BY-4.0 · <a href="https://github.com/gmanch94/ai-architect-showcase">github.com/gmanch94/ai-architect-showcase</a></div>
+<script>
+const MODULE_COLORS = {1:'#2196F3', 2:'#4CAF50', 3:'#FF9800', 5:'#9C27B0'};
+const MODULE_DARK = {1:'#1565C0', 2:'#2E7D32', 3:'#E65100', 5:'#6A1B9A'};
+const MODULE_NAMES = {1:'Foundations', 2:'ML Methods', 3:'NLP', 5:'Generative AI'};
+
+const treeData = {
+  name: "AI Fundamentals\nMindmap",
+  detail: "Build AI literacy for business leaders without coding. 4 topic clusters: AI as a general-purpose technology, classical ML methods, NLP, and Generative AI.",
+  children: [
+    { name: "Foundations", m: 1, detail: "AI as the next phase of digital transformation. AI = getting computers to do things requiring human intelligence. ML = subset focused on learning without explicit programming.",
+      pros: ["Frames AI strategically as a general-purpose technology", "Connects AI to prior digital waves (internet, cloud, mobile)"],
+      cons: ["Hype risk — not every AI project becomes a winner", "GPT-style returns take 5+ years to materialize"],
+      children: [
+        { name: "AI vs ML vs DL", m: 1, detail: "AI = broad goal (human-like intelligence). ML = computers learn from data without explicit programming. DL = neural networks with many layers. Each strict subset of the prior.", pros: ["Clear conceptual hierarchy"], cons: ["Marketing collapses these terms"] },
+        { name: "AI as GPT", m: 1, detail: "General-purpose technology — like steam, electricity, internet. Pervasive use across industries + dynamism. Stimulates innovation, growth, organizational redesign.", pros: ["Predicts wide industry diffusion", "Justifies long-horizon investment"], cons: ["GPT impact lags adoption by years"] },
+        { name: "GPT Evidence", m: 1, detail: "Goldfarb/Taska/Teodoridis 2019 study. ML = 370K+ jobs across all NAICS2 industries. 14.6% are research jobs (high indicator of GPT potential).", pros: ["Empirical, not just hype"], cons: ["Job postings ≠ deployed value"] },
+        { name: "Digital Transformation Timeline", m: 1, detail: "Internet (late 90s) → Cloud (mid 00s) → Mobile (late 00s) → AI (now). Slow movers paid the price each wave.", pros: ["Historical analog", "Urgency frame for laggards"], cons: ["Each wave had different competitive dynamics"] },
+        { name: "Industry Spread", m: 1, detail: "AI jobs span Finance (40K), Healthcare (102K), Manufacturing (37K), Information (32K), Retail, Education. Truly cross-sector.", pros: ["No vertical is exempt"], cons: ["Spread ≠ depth — some industries still nascent"] }
+      ]
+    },
+    { name: "ML Methods", m: 2, detail: "Closer look at how ML approximates relationships between inputs (X) and outputs (y). Logistic regression, decision trees, random forests, neural nets. Plus model selection and feature engineering.",
+      pros: ["Demystifies the ML toolbox for biz leaders", "Helps evaluate vendor/team claims"],
+      cons: ["Math glossed over — leaders still need data science partners"],
+      children: [
+        { name: "Logistic Regression", m: 2, detail: "Binary classification (yes/no, click/no-click). Estimates probability conditional on features. Logit constrains output 0-1. Among the most popular methods in all of statistics.",
+          pros: ["Interpretable coefficients", "Fast to train", "Works with small data"],
+          cons: ["Linear decision boundary", "Struggles with complex interactions"]
+        },
+        { name: "Decision Trees", m: 2, detail: "Iteratively split features for predictive power. Greedy algorithm minimizes entropy at each split. Easy to read as if/then rules.",
+          pros: ["Highly interpretable", "Handles mixed data types", "No scaling needed"],
+          cons: ["Overfit easily", "Unstable to small data changes"]
+        },
+        { name: "Random Forests", m: 2, detail: "Ensemble of many decision trees. Each trained on random data + feature subset. Final prediction = vote across trees. Very popular and powerful.",
+          pros: ["Robust accuracy", "Handles missing data", "Built-in feature importance"],
+          cons: ["Loses tree interpretability", "Slower than single tree"]
+        },
+        { name: "Neural Networks", m: 2, detail: "Inspired by biological neurons. Inputs → hidden layers (weights/parameters) → outputs. Deep NN = many hidden layers. State of the art for images, audio, video.",
+          pros: ["Captures complex non-linearities", "Best on unstructured data", "Improves with more data + GPUs"],
+          cons: ["Black-box — hard to interpret", "Needs lots of data + compute", "Hard to debug"]
+        },
+        { name: "Other Methods", m: 2, detail: "Boosting (XGBoost, LightGBM), SVM, LASSO, Ridge, kernel/weighted regression — many alternatives. Choice depends on data shape and interpretability needs.", pros: ["Rich toolbox"], cons: ["Choice paralysis"] },
+        { name: "Model Selection", m: 2, detail: "Many algorithms exist for any prediction problem. Halevy/Norvig/Pereira 2009 (IEEE): 'Unreasonable effectiveness of data' — performance differences between modern algorithms small vs differences within same algorithm at more/less data.",
+          pros: ["Frees leaders from picking 'best' algorithm", "Justifies data investment"],
+          cons: ["Doesn't apply equally in low-data regimes"]
+        },
+        { name: "Feature Engineering", m: 2, detail: "Structured data → use raw columns. Unstructured (text, images) → must engineer features. Time-consuming, requires domain expertise. DL automates feature extraction from raw inputs.",
+          pros: ["Domain knowledge becomes the moat"],
+          cons: ["Most expensive part of ML pipeline", "DL eats classical FE on big data"]
+        },
+        { name: "Data > Models doctrine", m: 2, detail: "More data with simple model often beats fancy model with less data. Anchor principle for non-data leaders making investment trade-offs.", pros: ["Simplifies decision making", "Justifies data infra spend"], cons: ["Quality matters as much as quantity"] }
+      ]
+    },
+    { name: "NLP", m: 3, detail: "Natural Language Processing — converting text into features for prediction. Sentiment, topic modeling, generative models intro (GANs/VAEs).",
+      pros: ["Unlocks unstructured text — most enterprise data", "Many off-the-shelf tools"],
+      cons: ["Multilingual + slang handling fragile", "Pre-LLM techniques being replaced fast"],
+      children: [
+        { name: "Text as Unstructured Data", m: 3, detail: "Reviews, chatter, news, support tickets. Rich signals about markets and decisions if you can extract them.", pros: ["Massive untapped enterprise corpus"], cons: ["Quality varies wildly"] },
+        { name: "Text Pre-processing", m: 3, detail: "Strip punctuation, normalize whitespace, lowercase, lemmatize. Get text into clean shape before feature extraction.", pros: ["Cheap, well-understood"], cons: ["Loses signal (e.g. exclamation marks for sentiment)"] },
+        { name: "Text Features", m: 3, detail: "Single words (bag-of-words), n-grams, sentiment scores, length, named entities. Each becomes a column for downstream ML.", pros: ["Mostly off-the-shelf"], cons: ["Sparse, high-dimensional"] },
+        { name: "Sentiment Analysis", m: 3, detail: "Classify text as positive/negative/neutral, or richer emotion taxonomies. Predicts buying behavior, churn, satisfaction.",
+          pros: ["Mature tooling (VADER, BERT-based)"],
+          cons: ["Sarcasm, irony, domain shift"]
+        },
+        { name: "Topic Modeling", m: 3, detail: "Unsupervised — group documents by latent topics (LDA, BERTopic). Useful for organizing large corpora without labels.",
+          pros: ["No labels needed", "Surfaces unknown themes"],
+          cons: ["Topic coherence varies", "Hard to name topics automatically"]
+        },
+        { name: "NLP Workflow", m: 3, detail: "Articles → features → train/test split → train model → evaluate → deploy. Same MLOps pattern as structured ML.", pros: ["Standard pipeline"], cons: ["Drift faster — language evolves"] },
+        { name: "Generative Models (GANs/VAEs)", m: 3, detail: "Instead of classifying, generate new samples that look like training data. GAN = generator + discriminator competing. VAE = encode-decode through bottleneck. Pre-LLM generative tech.",
+          pros: ["Creative outputs (GANGogh, deepfakes, music)"],
+          cons: ["Hard to control output", "Mode collapse, training instability"]
+        }
+      ]
+    },
+    { name: "Generative AI", m: 5, detail: "AI that generates plausible content (text, images, audio, code). LLMs, prompt engineering, the GenAI stack, RAG vs fine-tuning. The defining commercial AI wave of the 2020s.",
+      pros: ["Massive productivity unlock for knowledge work"],
+      cons: ["Hallucinations, IP risk, hard to govern"],
+      children: [
+        { name: "What is GenAI", m: 5, detail: "AI that learns underlying patterns from training data and generates plausible content. Usually unstructured (text, image, audio). Distinguished from discriminative AI.", pros: ["Creates net-new artifacts"], cons: ["Plausibility ≠ accuracy"] },
+        { name: "LLMs (GPT/Claude/Llama)", m: 5, detail: "Large Language Models. GPT-3 = 175B params, GPT-4 = 1T+. Trained on CommonCrawl, Wikipedia, books. Predict next token given context.",
+          pros: ["General-purpose language interface", "Few-shot learning"],
+          cons: ["Tremendous compute cost", "Training cutoff = stale knowledge"]
+        },
+        { name: "How LLMs Work", m: 5, detail: "Token prediction: given 'Elephants are the ___', predict most probable next word. Iterate to generate sequences. Transformer architecture under the hood.",
+          pros: ["Conceptually simple"],
+          cons: ["No reasoning — just probability"]
+        },
+        { name: "Limitations", m: 5, detail: "Hallucinations from token completion. Batch training = stale. Bias and harmful content. No transparency on sources. Plagiarism + IP lawsuits.",
+          pros: ["Well-documented failure modes"],
+          cons: ["No silver bullet — all need mitigation"]
+        },
+        { name: "Productivity Impact", m: 5, detail: "Eloundou et al. 2023 (arXiv:2303.10130): 80% of US workforce will see ≥10% of tasks affected by LLMs. 19% will see ≥50% impacted. Most exposed: legal, tech, scientists, architects, managers.",
+          pros: ["Quantified impact gives planning anchor"],
+          cons: ["Task-level impact ≠ job displacement"]
+        },
+        { name: "GenAI Stack", m: 5, detail: "4 layers: (1) Compute infra (Nvidia, TSMC, AWS/Azure/GCP), (2) Foundation models (OpenAI, Anthropic, Google, Meta Llama), (3) Fine-tuned/customized models (RAG, fine-tuning), (4) Applications (Copilot, Sudowrite, Alltius).",
+          pros: ["Frame for value capture analysis", "Each layer has different economics"],
+          cons: ["Boundaries blurring — providers move up/down stack"]
+        },
+        { name: "Foundation Models", m: 5, detail: "Pre-trained on massive corpora. OpenAI (GPT-4), Anthropic (Claude), Google (Gemini), Meta (Llama 2/3 — open). Llama 2 70B competitive but trails GPT-4 + PaLM-2 on most benchmarks.",
+          pros: ["Open source narrowing the gap", "Cost differences large"],
+          cons: ["Vendor lock-in risk", "Capability moves fast"]
+        },
+        { name: "RAG", m: 5, detail: "Retrieval Augmented Generation. Retrieve relevant snippets from a knowledge source, prepend to prompt, ask LLM to answer based on context. No model retraining needed.",
+          pros: ["Cheap", "Fresh data", "Citable sources", "No retraining"],
+          cons: ["Quality bound by retrieval", "Prompt length limits"]
+        },
+        { name: "Fine-tuning", m: 5, detail: "Tune parameters of pre-trained model on custom dataset. Persistent change — model learns new domain/style.",
+          pros: ["No need to share context per query", "Can match domain voice"],
+          cons: ["Expensive", "Needs labeled data", "Catastrophic forgetting risk"]
+        },
+        { name: "Prompt Engineering", m: 5, detail: "6 principles: (1) Set system params (temperature), (2) Use system prompts/personas, (3) Few-shot examples, (4) Chain-of-thought / step-by-step, (5) Clarity + specificity + constraints, (6) Psychological/emotion prompts (8% accuracy lift).",
+          pros: ["Free leverage — no model change", "Iterates fast"],
+          cons: ["Brittle across models", "Not a substitute for fine-tuning at scale"]
+        },
+        { name: "Creativity Evidence", m: 5, detail: "Torrance Test: ChatGPT vs 2718 students — AI scored top tier on originality, fluency, flexibility. AUT test: AI 2-3x more ideas than humans, scored better than 91%. Haiku test: humans 4.15 vs AI 4.14.",
+          pros: ["Ideation is now free — Jakob Nielsen"],
+          cons: ["Creativity benchmarks contested"]
+        },
+        { name: "Value Capture", m: 5, detail: "Infra wins regardless of which apps succeed (Nvidia, TSMC). Foundation models = winner-take-most? Apps differentiate via data + workflow integration.",
+          pros: ["Strategic clarity for build-vs-buy"],
+          cons: ["Open source erodes foundation moats"]
+        }
+      ]
+    }
+  ]
+};
+
+const width = window.innerWidth;
+const height = window.innerHeight - 60;
+const radius = Math.min(width, height) / 2 - 80;
+
+const svg = d3.select("#canvas")
+  .attr("width", width).attr("height", height)
+  .append("g").attr("transform", `translate(${width/2},${height/2 + 30})`);
+
+const tooltip = d3.select("#tooltip");
+const tree = d3.tree().size([2 * Math.PI, radius]).separation((a,b) => (a.parent == b.parent ? 1 : 2) / a.depth);
+
+const root = d3.hierarchy(treeData);
+root.x0 = 0; root.y0 = 0;
+root.children.forEach(c => collapseTo(c, 1));
+function collapseTo(d, depth) {
+  if (d.depth >= depth && d.children) { d._children = d.children; d.children = null; }
+  if (d.children) d.children.forEach(c => collapseTo(c, depth));
+}
+
+function update(source) {
+  const data = tree(root);
+  const nodes = data.descendants();
+  const links = data.links();
+
+  svg.selectAll(".link").remove();
+  svg.selectAll(".node").remove();
+
+  svg.selectAll(".link").data(links).enter().append("path")
+    .attr("class","link")
+    .attr("d", d3.linkRadial().angle(d=>d.x).radius(d=>d.y));
+
+  const node = svg.selectAll(".node").data(nodes).enter().append("g")
+    .attr("class","node")
+    .attr("transform", d => `rotate(${d.x*180/Math.PI - 90}) translate(${d.y},0)`)
+    .on("click", (e,d) => {
+      if (d.children) { d._children = d.children; d.children = null; }
+      else if (d._children) { d.children = d._children; d._children = null; }
+      update(d);
+    })
+    .on("mouseover", (e,d) => {
+      const m = d.data.m;
+      const color = m ? MODULE_COLORS[m] : '#666';
+      const tag = m ? `<span class="module-tag" style="background:${color}">${MODULE_NAMES[m]}</span><br>` : '';
+      const detail = d.data.detail ? `<div class="detail">${d.data.detail}</div>` : '';
+      const pros = d.data.pros ? `<div class="pros"><strong>Pros</strong><ul>${d.data.pros.map(p=>`<li>${p}</li>`).join('')}</ul></div>` : '';
+      const cons = d.data.cons ? `<div class="cons"><strong>Cons</strong><ul>${d.data.cons.map(c=>`<li>${c}</li>`).join('')}</ul></div>` : '';
+      tooltip.html(`<h4>${d.data.name}</h4>${tag}${detail}${pros}${cons}`)
+        .style("left", (e.pageX + 12)+"px").style("top", (e.pageY + 12)+"px").style("opacity", 1);
+    })
+    .on("mousemove", e => tooltip.style("left", (e.pageX + 12)+"px").style("top", (e.pageY + 12)+"px"))
+    .on("mouseout", () => tooltip.style("opacity", 0));
+
+  node.append("circle")
+    .attr("r", d => d.depth === 0 ? 10 : (d._children ? 7 : 5))
+    .attr("fill", d => d._children ? '#fff' : (d.data.m ? MODULE_COLORS[d.data.m] : '#999'))
+    .attr("stroke", d => d.data.m ? MODULE_DARK[d.data.m] : '#666');
+
+  node.append("text")
+    .attr("dy", "0.31em")
+    .attr("x", d => d.x < Math.PI === !d.children ? 10 : -10)
+    .attr("text-anchor", d => d.x < Math.PI === !d.children ? "start" : "end")
+    .attr("transform", d => d.x >= Math.PI ? "rotate(180)" : null)
+    .attr("fill", d => d.data.m ? MODULE_DARK[d.data.m] : '#222')
+    .text(d => d.data.name)
+    .clone(true).lower()
+    .attr("stroke", "white").attr("stroke-width", 3);
+}
+
+update(root);
+</script>
+</body>
+</html>

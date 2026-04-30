@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI — Plain-English Glossary</title>
+<style>
+  :root {
+    --m1: #2196F3; --m2: #4CAF50; --m3: #FF9800; --m5: #9C27B0;
+    --m1-dk: #1565C0; --m2-dk: #2E7D32; --m3-dk: #E65100; --m5-dk: #6A1B9A;
+    --bg: #fafafa; --fg: #222; --muted: #666; --card: #fff;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--fg); line-height: 1.5; }
+  header { padding: 24px 32px; background: white; border-bottom: 1px solid #eee; }
+  header h1 { margin: 0 0 6px; font-size: 24px; }
+  header p { margin: 0; color: var(--muted); }
+  .controls { display: flex; gap: 12px; flex-wrap: wrap; padding: 16px 32px; background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 10; }
+  #search { flex: 1; min-width: 220px; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+  .filter-btn { padding: 8px 14px; border: 1px solid #ddd; border-radius: 20px; background: white; cursor: pointer; font-size: 13px; transition: all 0.15s; }
+  .filter-btn.active { color: white; }
+  .filter-btn[data-mod="all"].active { background: #444; border-color: #444; }
+  .filter-btn[data-mod="1"].active { background: var(--m1); border-color: var(--m1); }
+  .filter-btn[data-mod="2"].active { background: var(--m2); border-color: var(--m2); }
+  .filter-btn[data-mod="3"].active { background: var(--m3); border-color: var(--m3); }
+  .filter-btn[data-mod="5"].active { background: var(--m5); border-color: var(--m5); }
+  main { padding: 24px 32px; max-width: 1100px; margin: 0 auto; }
+  .term-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .term { background: var(--card); border-radius: 8px; padding: 18px; border-left: 4px solid; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .term[data-mod="1"] { border-left-color: var(--m1); }
+  .term[data-mod="2"] { border-left-color: var(--m2); }
+  .term[data-mod="3"] { border-left-color: var(--m3); }
+  .term[data-mod="5"] { border-left-color: var(--m5); }
+  .term h3 { margin: 0 0 4px; font-size: 16px; }
+  .term .mod-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; color: white; margin-bottom: 8px; }
+  .term[data-mod="1"] .mod-tag { background: var(--m1); }
+  .term[data-mod="2"] .mod-tag { background: var(--m2); }
+  .term[data-mod="3"] .mod-tag { background: var(--m3); }
+  .term[data-mod="5"] .mod-tag { background: var(--m5); }
+  .term .plain { font-size: 14px; color: var(--fg); margin: 6px 0; }
+  .term .when { font-size: 12px; color: var(--muted); border-top: 1px dashed #eee; margin-top: 10px; padding-top: 8px; }
+  .term .when strong { color: var(--fg); }
+  .hidden { display: none; }
+  .empty { text-align: center; color: var(--muted); padding: 40px; font-style: italic; }
+  @media print { .controls { display: none; } body { background: white; } .term { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>AI — Plain-English Glossary</h1>
+  <p>50+ AI terms in business language, tagged by topic. For non-technical leaders.</p>
+</header>
+<div class="controls">
+  <input id="search" type="search" placeholder="Search terms (e.g. 'overfit', 'RAG', 'token')…">
+  <button class="filter-btn active" data-mod="all">All</button>
+  <button class="filter-btn" data-mod="1">Foundations</button>
+  <button class="filter-btn" data-mod="2">ML</button>
+  <button class="filter-btn" data-mod="3">NLP</button>
+  <button class="filter-btn" data-mod="5">GenAI</button>
+</div>
+<main>
+  <div id="grid" class="term-grid"></div>
+  <div id="empty" class="empty hidden">No terms match your search.</div>
+</main>
+<footer style="text-align:center; padding: 18px 32px; font-size: 12px; color: #999; border-top: 1px solid #eee; background: #fff;">© gmanch94 · CC-BY-4.0 · github.com/gmanch94/ai-architect-showcase · Companion: <a href="executive-briefing.html">executive briefing</a> · <a href="mindmap.html">mindmap</a> · <a href="case-study-library.html">case studies</a></footer>
+<script>
+const TERMS = [
+  // Foundations
+  { t: "Artificial Intelligence (AI)", m: 1, p: "Computers doing things that normally require human intelligence — understanding language, reasoning, learning, perceiving the world.", w: "When you need the umbrella term covering all of ML, DL, NLP, computer vision, GenAI." },
+  { t: "Machine Learning (ML)", m: 1, p: "A subset of AI focused on getting computers to learn patterns from data without explicit programming.", w: "When you mean the model is trained on examples — not hand-coded rules." },
+  { t: "Deep Learning (DL)", m: 1, p: "ML using neural networks with many hidden layers. State of the art for images, audio, text.", w: "When the data is unstructured and large, and you need top accuracy." },
+  { t: "General-Purpose Technology (GPT)", m: 1, p: "A foundational tech that spreads across many sectors and stimulates broad innovation. Examples: electricity, internet, ML.", w: "When justifying long-horizon AI investment to a board." },
+  { t: "Digital Transformation", m: 1, p: "Reshaping a business around digital tech. AI is the current wave (after internet, cloud, mobile).", w: "When framing AI as continuation of a known pattern." },
+  { t: "Algorithm", m: 1, p: "A step-by-step recipe a computer follows. In ML, the algorithm is the learning procedure (e.g. random forest, gradient descent).", w: "When distinguishing the procedure from the trained model it produces." },
+  { t: "Model", m: 1, p: "The output of training — a function that takes inputs and produces predictions. The 'thing you ship'.", w: "When discussing what gets deployed and monitored." },
+
+  // ML Methods
+  { t: "Supervised Learning", m: 2, p: "Train on labeled examples (input + correct answer). Most business ML — fraud, churn, credit scoring.", w: "When you have historical examples of the outcome you want to predict." },
+  { t: "Unsupervised Learning", m: 2, p: "Train on unlabeled data — find structure (clusters, topics, anomalies) without being told the answer.", w: "When you don't have labels but want to discover groups (e.g. customer segments)." },
+  { t: "Reinforcement Learning", m: 2, p: "Agent learns by acting, receiving rewards, and adjusting. Used in robotics, game-playing, RLHF for LLMs.", w: "When you need an agent that learns from trial-and-error in an environment." },
+  { t: "Features (X)", m: 2, p: "The input variables — columns of your data that the model uses to predict.", w: "When discussing what the model 'sees' as inputs." },
+  { t: "Label / Target (y)", m: 2, p: "The thing you're predicting — the right answer for each training example.", w: "When defining the problem ('what y are we predicting?')." },
+  { t: "Logistic Regression", m: 2, p: "A classic model for yes/no predictions. Outputs a probability between 0 and 1.", w: "When the outcome is binary and interpretability matters. Always demand it as baseline." },
+  { t: "Decision Tree", m: 2, p: "A flowchart of if/then splits learned from data. Easy to read.", w: "When stakeholders need to follow the model's logic." },
+  { t: "Random Forest", m: 2, p: "Many decision trees, each on a random data slice, voting together. Very common, very strong on tabular data.", w: "Strong default beyond logistic regression for structured business data." },
+  { t: "Neural Network", m: 2, p: "Layers of mathematical 'neurons' that transform inputs into outputs. The architecture behind deep learning.", w: "When working with unstructured data or complex non-linear patterns." },
+  { t: "Hidden Layer", m: 2, p: "The middle layers in a neural net — between input and output. 'Deep' = many hidden layers.", w: "When discussing model complexity or interpretability concerns." },
+  { t: "Weight / Parameter", m: 2, p: "The learned numbers inside a model. Training = finding the best weights. GPT-4 has ~1 trillion of them.", w: "When discussing model size or training cost." },
+  { t: "Training Data", m: 2, p: "The examples the model learns from.", w: "When defining what data goes into model creation (vs. validation/test)." },
+  { t: "Test Data", m: 2, p: "Held-out examples used to measure how well the model generalizes.", w: "When evaluating performance — never test on training data." },
+  { t: "Overfitting", m: 2, p: "Model memorizes training data instead of learning the pattern. Looks great in training, fails in production.", w: "When training accuracy is much higher than test accuracy — red flag." },
+  { t: "Underfitting", m: 2, p: "Model is too simple to capture the pattern. Bad on both training and test data.", w: "When even training accuracy is low — model needs more capacity or features." },
+  { t: "Bias-Variance Tradeoff", m: 2, p: "Simple models miss patterns (bias). Complex models fit noise (variance). Goal is the sweet spot.", w: "When debating model complexity or interpretability vs. accuracy." },
+  { t: "Ensemble", m: 2, p: "Combining many models (e.g. 100 trees voting). Almost always beats single models.", w: "When your team proposes an ensemble — it's standard practice, not exotic." },
+  { t: "Boosting", m: 2, p: "Sequentially train models that each correct the prior model's mistakes. XGBoost, LightGBM are the popular flavors.", w: "When your team picks XGBoost — it's the dominant choice for tabular Kaggle wins." },
+  { t: "Feature Engineering", m: 2, p: "Hand-crafting useful inputs from raw data. Most expensive part of classic ML.", w: "When discussing why some ML projects take 6+ months — it's mostly this." },
+  { t: "Unstructured Data", m: 2, p: "Data without rows and columns — text, images, audio, video. Needs feature engineering or deep learning.", w: "When you can't put it in a spreadsheet — most enterprise data is this." },
+  { t: "Structured Data", m: 2, p: "Data in tables (rows + columns). Easy for classical ML.", w: "Default for finance, ops, sales analytics." },
+  { t: "Backpropagation", m: 2, p: "The algorithm that teaches neural nets by sending error signals backward through layers.", w: "When the team mentions training cost or stability of NNs." },
+  { t: "GPU", m: 2, p: "Graphics Processing Unit. Hardware that made deep learning practical because it does many simple math operations in parallel.", w: "When budgeting AI compute — GPU cost is often the largest line item." },
+  { t: "\"Unreasonable Effectiveness of Data\" (Halevy/Norvig/Pereira 2009)", m: 2, p: "More data with a simple model often beats a fancy model with less data. From the Halevy/Norvig/Pereira 2009 IEEE paper.", w: "When choosing between data investment and algorithm sophistication — pick data." },
+
+  // NLP
+  { t: "Natural Language Processing (NLP)", m: 3, p: "AI techniques for processing and understanding human language.", w: "When the input or output of your system is text." },
+  { t: "Sentiment Analysis", m: 3, p: "Classify text as positive, negative, or neutral. Sometimes finer-grained emotions.", w: "When measuring brand perception, customer satisfaction, social listening." },
+  { t: "Topic Modeling", m: 3, p: "Unsupervised method that groups documents into themes without labels.", w: "When you have a pile of text and need to know what's in there." },
+  { t: "Bag of Words", m: 3, p: "Treat a document as just the count of each word, ignoring order.", w: "Cheap classic baseline for text classification." },
+  { t: "n-gram", m: 3, p: "Sequence of n words. Bigrams ('machine learning'), trigrams ('artificial neural network'). Captures phrases.", w: "When word order or short phrases carry meaning." },
+  { t: "Embedding", m: 3, p: "A numerical vector representing meaning. Words/sentences with similar meaning sit near each other in vector space.", w: "When discussing how modern NLP and RAG actually work under the hood." },
+  { t: "Tokenization", m: 3, p: "Splitting text into units (words, sub-words) the model can process.", w: "When discussing prompt length limits or non-English performance." },
+  { t: "Generative Model", m: 3, p: "Learns the underlying distribution of training data so it can generate new examples that look like it.", w: "When the goal is to create new content, not just classify." },
+  { t: "GAN (Generative Adversarial Network)", m: 3, p: "Two networks compete: generator creates fake data, discriminator tries to spot fakes. Famous for deepfakes and AI art.", w: "When generating images that need to look photorealistic." },
+  { t: "VAE (Variational Autoencoder)", m: 3, p: "Encode data to a compact representation, then decode to reconstruct. Useful for generation and anomaly detection.", w: "When you need a smooth, interpretable latent space — e.g. design exploration." },
+
+  // Generative AI
+  { t: "Generative AI (GenAI)", m: 5, p: "AI that creates new content (text, images, audio, code) by learning patterns from training data.", w: "When the system's job is to produce something, not just classify or score." },
+  { t: "Large Language Model (LLM)", m: 5, p: "A neural network trained on huge text corpora to predict the next token. GPT-4, Claude, Gemini, Llama are LLMs.", w: "When the modality is text and you want general-purpose language capability." },
+  { t: "Token", m: 5, p: "The unit of text an LLM processes — roughly a word or sub-word. Pricing and length limits are per token.", w: "When budgeting LLM API cost or hitting context-window limits." },
+  { t: "Hallucination", m: 5, p: "Model confidently generates false information. Comes from token-completion approach with no fact-grounding.", w: "When deploying LLMs in any high-stakes context — assume it will happen." },
+  { t: "Prompt", m: 5, p: "The instruction you give an LLM. Includes the task, context, examples, and constraints.", w: "When operating an LLM — your prompt is your code." },
+  { t: "Prompt Engineering", m: 5, p: "Crafting prompts to get reliable, high-quality outputs. Cheaper than fine-tuning.", w: "First lever to pull when LLM output is poor." },
+  { t: "System Prompt", m: 5, p: "A persistent instruction that frames the model's role for a session ('You are a careful customer support agent').", w: "When you want consistent behavior across many user queries." },
+  { t: "Few-Shot Prompting", m: 5, p: "Include 2–5 examples of the desired output in your prompt so the model imitates the pattern.", w: "When zero-shot quality is poor and you have a few good examples." },
+  { t: "Chain-of-Thought (CoT)", m: 5, p: "Ask the model to think step-by-step before answering. Improves accuracy on reasoning tasks.", w: "On math, logic, multi-step problems." },
+  { t: "Temperature", m: 5, p: "A knob controlling randomness. 0 = deterministic. High = creative/varied. Most production systems use 0–0.3.", w: "When you need consistency (low temp) vs. creativity (high temp)." },
+  { t: "Foundation Model", m: 5, p: "A large pre-trained model (LLM, image model) usable across many tasks via prompting or fine-tuning.", w: "When discussing the model layer of the GenAI stack." },
+  { t: "Fine-Tuning", m: 5, p: "Continue training a foundation model on your domain data so it absorbs your style/knowledge.", w: "When you have lots of high-quality examples and prompt engineering isn't enough." },
+  { t: "RAG (Retrieval-Augmented Generation)", m: 5, p: "Look up relevant snippets from your knowledge base, paste them into the prompt, ask the LLM to answer based on them.", w: "When the model needs fresh, factual, or proprietary info. First choice before fine-tuning." },
+  { t: "Vector Database", m: 5, p: "A database optimized for similarity search on embeddings. The retrieval engine for RAG. (Pinecone, Weaviate, pgvector.)", w: "When implementing RAG at scale." },
+  { t: "Context Window", m: 5, p: "How much text (in tokens) an LLM can read in one prompt. GPT-4 ~128K, Claude ~200K, some models 1M+.", w: "When designing prompts that include long documents." },
+  { t: "RLHF (Reinforcement Learning from Human Feedback)", m: 5, p: "Humans rank model outputs; the model learns to prefer better answers. How ChatGPT was trained to be helpful.", w: "When discussing why some models feel more aligned than others." },
+  { t: "Agent", m: 5, p: "An LLM that uses tools (search, code, APIs) and acts in multiple steps to achieve a goal.", w: "When the task requires more than one model call — research, multi-step workflows." },
+  { t: "Open-Source Model", m: 5, p: "A foundation model whose weights are downloadable (Llama, Mistral, DeepSeek). You can self-host.", w: "When data residency, cost, or customization rule out API-only models." }
+];
+
+const grid = document.getElementById('grid');
+const empty = document.getElementById('empty');
+const search = document.getElementById('search');
+const buttons = document.querySelectorAll('.filter-btn');
+
+let activeMod = 'all';
+
+function render() {
+  const q = search.value.trim().toLowerCase();
+  let visible = 0;
+  grid.innerHTML = '';
+  TERMS.sort((a,b) => a.t.localeCompare(b.t)).forEach(term => {
+    const matchesMod = activeMod === 'all' || String(term.m) === activeMod;
+    const matchesSearch = !q || term.t.toLowerCase().includes(q) || term.p.toLowerCase().includes(q) || term.w.toLowerCase().includes(q);
+    if (matchesMod && matchesSearch) {
+      visible++;
+      const div = document.createElement('div');
+      div.className = 'term';
+      div.dataset.mod = term.m;
+      const modName = {1:'Foundations', 2:'ML Methods', 3:'NLP', 5:'GenAI'}[term.m];
+      div.innerHTML = `
+        <h3>${term.t}</h3>
+        <span class="mod-tag">${modName}</span>
+        <div class="plain">${term.p}</div>
+        <div class="when"><strong>Use when:</strong> ${term.w}</div>
+      `;
+      grid.appendChild(div);
+    }
+  });
+  empty.classList.toggle('hidden', visible > 0);
+}
+
+buttons.forEach(b => b.addEventListener('click', () => {
+  buttons.forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  activeMod = b.dataset.mod;
+  render();
+}));
+search.addEventListener('input', render);
+render();
+</script>
+</body>
+</html>

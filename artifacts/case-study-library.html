@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Case Study Library</title>
+<style>
+  :root {
+    --t1:#2196F3; --t1d:#1565C0;
+    --t2:#4CAF50; --t2d:#2E7D32;
+    --t3:#FF9800; --t3d:#E65100;
+    --t5:#9C27B0; --t5d:#6A1B9A;
+    --bg:#f7f9fc; --card:#fff; --border:#e1e6ee; --text:#1a2332; --mute:#5b6b80;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: var(--bg); color: var(--text); line-height: 1.5; }
+  header { background: linear-gradient(135deg, #1565C0, #6A1B9A); color: #fff; padding: 28px 32px; }
+  header h1 { margin: 0 0 6px; font-size: 26px; }
+  header p { margin: 0; opacity: 0.9; font-size: 14px; }
+  .wrap { max-width: 1300px; margin: 0 auto; padding: 24px 32px 80px; }
+  .filters { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; padding: 16px; background: #fff; border: 1px solid var(--border); border-radius: 10px; }
+  .filters input { flex: 1; min-width: 220px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
+  .chip { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 2px solid transparent; background: #eef1f5; color: #5b6b80; transition: all 0.15s; }
+  .chip:hover { background: #e1e6ee; }
+  .chip.on { color: #fff; }
+  .chip.on.t1 { background: var(--t1); border-color: var(--t1d); }
+  .chip.on.t2 { background: var(--t2); border-color: var(--t2d); }
+  .chip.on.t3 { background: var(--t3); border-color: var(--t3d); }
+  .chip.on.t5 { background: var(--t5); border-color: var(--t5d); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; }
+  .case { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; border-top: 4px solid #ccc; transition: transform 0.15s, box-shadow 0.15s; }
+  .case:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+  .case.t1 { border-top-color: var(--t1); }
+  .case.t2 { border-top-color: var(--t2); }
+  .case.t3 { border-top-color: var(--t3); }
+  .case.t5 { border-top-color: var(--t5); }
+  .case h3 { margin: 0 0 4px; font-size: 16px; color: #1a2332; }
+  .case .org { font-size: 12px; color: var(--mute); font-weight: 600; margin-bottom: 10px; }
+  .case .body { font-size: 13px; margin: 0 0 10px; color: #334; }
+  .case .lesson { background: #fff7e6; border-left: 3px solid #FF9800; padding: 8px 10px; font-size: 12px; border-radius: 4px; margin-bottom: 10px; }
+  .case .lesson b { color: #E65100; }
+  .case .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .tag { background: #eef1f5; color: #5b6b80; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+  .badge.t1 { background: var(--t1); }
+  .badge.t2 { background: var(--t2); }
+  .badge.t3 { background: var(--t3); }
+  .badge.t5 { background: var(--t5); }
+  .count { color: var(--mute); font-size: 13px; margin-bottom: 12px; }
+  .none { text-align: center; padding: 40px; color: var(--mute); font-style: italic; background: #fff; border-radius: 10px; }
+  footer.cc { text-align: center; padding: 20px; font-size: 12px; color: var(--mute); }
+  @media print {
+    header { background: #1565C0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .filters { display: none; }
+    .grid { grid-template-columns: 1fr 1fr; }
+    .case { break-inside: avoid; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>AI Case Study Library</h1>
+  <p>14 case cards covering AI Foundations, ML methods, NLP, and Generative AI. Filter by topic + full-text search.</p>
+</header>
+
+<div class="wrap">
+
+<div class="filters">
+  <input id="q" placeholder="Search by name, org, lesson, tag…" oninput="render()">
+  <span class="chip on t1" data-m="1" onclick="toggle(this)">Foundations</span>
+  <span class="chip on t2" data-m="2" onclick="toggle(this)">ML</span>
+  <span class="chip on t3" data-m="3" onclick="toggle(this)">NLP</span>
+  <span class="chip on t5" data-m="5" onclick="toggle(this)">GenAI</span>
+</div>
+
+<div class="count" id="count"></div>
+<div id="grid" class="grid"></div>
+
+</div>
+
+<footer class="cc">© gmanch94 · CC-BY-4.0 · github.com/gmanch94/ai-architect-showcase · Companion: <a href="executive-briefing.html">executive briefing</a> · <a href="mindmap.html">mindmap</a> · <a href="ai-strategy-framework.md">strategy framework</a></footer>
+
+<script>
+const CASES = [
+  {
+    name: "Zillow's Zestimate algorithm",
+    org: "Zillow · real estate",
+    m: 2,
+    body: "Predicts home prices from millions of features (size, location, comps, photos). Underpins the Zillow brand and ad model.",
+    lesson: "Random forests and gradient-boosted trees beat linear regression on heterogeneous tabular real-estate data — but the 2021 Zillow Offers shutdown showed: <b>a model is not a market</b>. Predictions ≠ liquidity.",
+    tags: ["regression", "trees", "model risk"]
+  },
+  {
+    name: "\"Unreasonable Effectiveness of Data\"",
+    org: "Halevy, Norvig, Pereira · IEEE 2009",
+    m: 2,
+    body: "Compared multiple ML algorithms on a word-disambiguation task. Differences across algorithms were small. Doubling training data lifted every algorithm equally.",
+    lesson: "<b>Data &gt; Models.</b> Spend on data infrastructure and labeling before chasing exotic architectures. Anchor doctrine for ML method selection.",
+    tags: ["data quality", "anchor doctrine"]
+  },
+  {
+    name: "Credit card fraud detection",
+    org: "Banks · all major issuers",
+    m: 2,
+    body: "Real-time scoring of transactions. Models flag &lt; 0.1% of transactions as suspicious; false positives annoy customers, false negatives cost millions.",
+    lesson: "Class imbalance is the hard problem, not algorithm choice. Use precision @ k, not raw accuracy. Always demand a baseline (current rules engine).",
+    tags: ["classification", "imbalanced data", "baseline"]
+  },
+  {
+    name: "Netflix recommender",
+    org: "Netflix · streaming",
+    m: 2,
+    body: "Collaborative filtering + content embeddings drive ~80% of viewing minutes. The Netflix Prize ($1M, 2009) showed that ensembles of simple models beat any single fancy one.",
+    lesson: "Personalization compounds: every interaction improves the model. <b>The data flywheel</b> is the moat — competitors can copy the algorithm, not the watch history.",
+    tags: ["recommender", "data flywheel"]
+  },
+  {
+    name: "Amazon Go — computer vision retail",
+    org: "Amazon · physical retail",
+    m: 2,
+    body: "Sensor fusion + CV tracks shoppers and items. \"Just walk out\" checkout. Quietly de-emphasized in 2024 in favor of smart carts — CV alone was too brittle.",
+    lesson: "Even at FAANG-scale R&amp;D, computer vision in unconstrained environments is hard. <b>Pilot under the easiest conditions first</b>; production reality is harsher.",
+    tags: ["computer vision", "pilot scope"]
+  },
+  {
+    name: "Google Translate — neural MT switch",
+    org: "Google · NLP · 2016",
+    m: 3,
+    body: "Switched from phrase-based statistical MT to neural sequence-to-sequence in 2016. Translation quality jumped overnight — but only because Google had decade+ of parallel corpora.",
+    lesson: "<b>Deep learning unlocks unstructured data IF you have the data.</b> Without the corpus, the architecture buys you nothing.",
+    tags: ["NLP", "deep learning", "data"]
+  },
+  {
+    name: "Sentiment analysis on product reviews",
+    org: "E-commerce · widely deployed",
+    m: 3,
+    body: "Bag-of-words + logistic regression hits ~85% on review polarity. BERT/transformers reach ~95%. Worth the GPU cost? Depends on the downstream decision.",
+    lesson: "Pick the simplest model that meets the decision threshold. Don't pay for accuracy you can't act on. Topic modeling (unsupervised) often delivers more business insight than sentiment scores.",
+    tags: ["NLP", "sentiment", "topic modeling"]
+  },
+  {
+    name: "GANGogh — style transfer",
+    org: "Academic · 2017",
+    m: 3,
+    body: "GAN trained on Van Gogh paintings generates new \"Van Gogh-style\" images. Showcased generative models before LLMs went mainstream.",
+    lesson: "GANs and VAEs were the pre-LLM frontier of generative AI. Both still matter for image, audio, and synthetic-data generation. <b>GenAI ≠ just LLMs.</b>",
+    tags: ["GAN", "generative", "image"]
+  },
+  {
+    name: "Consultants + GPT-4 productivity study",
+    org: "Dell'Acqua et al. · HBS WP 24-013 · 2023",
+    m: 5,
+    body: "BCG consultants using GPT-4 finished tasks 25% faster and produced 40% higher-quality output on tasks within the AI's capability frontier. Performance varied sharply across the \"jagged frontier\" — some tasks AI helped, others it hurt.",
+    lesson: "GenAI compresses the skill distribution — weakest performers gain most. <b>Re-think performance management, training, and headcount planning around this</b>. But map the jagged frontier first: AI is not uniformly helpful.",
+    tags: ["productivity", "anchor stat", "workforce"]
+  },
+  {
+    name: "GitHub Copilot",
+    org: "GitHub / OpenAI · developer tools",
+    m: 5,
+    body: "Code completion fine-tuned on Codex / GPT-4. Reports 30–55% acceptance on suggestions; engineers report ~25% faster on common tasks. Sells per-seat at developer scale.",
+    lesson: "<b>Apps-layer GenAI captures value when latency, integration, and workflow fit matter.</b> The model is commoditized — IDE integration is the moat.",
+    tags: ["copilot", "apps layer", "developer"]
+  },
+  {
+    name: "RAG over enterprise wiki",
+    org: "Many enterprises · 2023+",
+    m: 5,
+    body: "Retrieve relevant policy / SOP chunks → feed into LLM prompt → grounded answer with citations. Standard pattern for HR, IT, legal, support.",
+    lesson: "<b>RAG before fine-tuning.</b> Cheaper, faster to update, attributable. Fine-tune only when style or domain vocabulary truly require it.",
+    tags: ["RAG", "GenAI", "knowledge"]
+  },
+  {
+    name: "Air Canada chatbot lawsuit",
+    org: "Air Canada · 2024",
+    m: 5,
+    body: "Chatbot promised a bereavement-fare refund the airline didn't honor. Tribunal ruled the airline was bound by what the bot said.",
+    lesson: "<b>Hallucination is a contract risk, not just a UX issue.</b> Ground GenAI in retrieval, log every conversation, escalate edge cases to humans. Risk-tier your deployments.",
+    tags: ["hallucination", "risk", "compliance"]
+  },
+  {
+    name: "Bloomberg GPT — domain LLM",
+    org: "Bloomberg · 2023",
+    m: 5,
+    body: "50B-parameter model fine-tuned on Bloomberg's proprietary financial data. Beats general LLMs on financial NLP benchmarks.",
+    lesson: "Fine-tuning pays off when (1) you have proprietary data competitors lack, (2) accuracy on a domain task is the product, and (3) you can absorb the cost. Most companies should NOT do this.",
+    tags: ["fine-tuning", "domain LLM", "moat"]
+  },
+  {
+    name: "Klarna AI customer service",
+    org: "Klarna · fintech · 2024",
+    m: 5,
+    body: "AI assistant handles 2/3 of customer chats — equivalent to 700 FTE. Resolution time: 11 min → 2 min. Estimated $40M profit lift.",
+    lesson: "<b>The reallocation is the value, not the cost saving.</b> Klarna re-deployed staff to higher-value work. AI is a general-purpose technology — but you have to redesign the work to capture the value.",
+    tags: ["customer service", "reallocation", "GPT"]
+  },
+];
+
+const TYPENAME = {1:'Foundations', 2:'ML', 3:'NLP', 5:'GenAI'};
+let active = new Set([1,2,3,5]);
+
+function toggle(el) {
+  const m = +el.dataset.m;
+  if (active.has(m)) { active.delete(m); el.classList.remove('on'); }
+  else { active.add(m); el.classList.add('on'); }
+  render();
+}
+function render() {
+  const q = document.getElementById('q').value.toLowerCase().trim();
+  const filtered = CASES.filter(c => {
+    if (!active.has(c.m)) return false;
+    if (!q) return true;
+    const hay = (c.name + ' ' + c.org + ' ' + c.body + ' ' + c.lesson + ' ' + c.tags.join(' ')).toLowerCase();
+    return hay.includes(q);
+  });
+  document.getElementById('count').textContent = `${filtered.length} of ${CASES.length} cases`;
+  const grid = document.getElementById('grid');
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="none">No cases match. Adjust filters or clear search.</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(c => `
+    <div class="case t${c.m}">
+      <span class="badge t${c.m}">${TYPENAME[c.m]}</span>
+      <h3>${c.name}</h3>
+      <div class="org">${c.org}</div>
+      <p class="body">${c.body}</p>
+      <div class="lesson"><b>Lesson:</b> ${c.lesson}</div>
+      <div class="tags">${c.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+render();
+</script>
+</body>
+</html>

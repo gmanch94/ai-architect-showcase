@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR AI Maturity Checklist</title>
+<!-- Chart.js CDN required -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f6fa;color:#1a1f2e;min-height:100vh;}
+
+  header{background:linear-gradient(135deg,#1a237e,#3949ab);color:#fff;padding:36px 48px 28px;}
+  header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px;}
+  header p{font-size:0.9rem;opacity:0.85;max-width:680px;}
+  .header-meta{display:flex;gap:32px;margin-top:18px;flex-wrap:wrap;align-items:center;}
+  .header-meta label{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.65;display:block;margin-bottom:4px;}
+  .header-meta input{background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.4);color:#fff;font-size:0.9rem;width:200px;padding:2px 0;outline:none;}
+  .header-meta input::placeholder{color:rgba(255,255,255,0.4);}
+  .btn-print{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:8px 20px;border-radius:8px;font-size:0.85rem;cursor:pointer;font-weight:600;}
+  .btn-print:hover{background:rgba(255,255,255,0.25);}
+
+  .main{display:grid;grid-template-columns:1fr 380px;gap:28px;max-width:1200px;margin:0 auto;padding:36px 24px 40px;}
+
+  .dim-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px #0000000d;margin-bottom:20px;overflow:hidden;}
+  .dim-header{padding:16px 24px;display:flex;align-items:center;gap:14px;cursor:pointer;}
+  .dim-icon{font-size:1.4rem;width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .dim-title-block{flex:1;}
+  .dim-title{font-size:0.95rem;font-weight:700;color:#1a237e;margin-bottom:2px;}
+  .dim-sub{font-size:0.75rem;color:#9fa8da;}
+  .dim-score-badge{font-size:1.2rem;font-weight:800;min-width:44px;text-align:right;}
+  .dim-body{padding:0 24px 20px;display:none;}
+  .dim-body.open{display:block;}
+
+  .dim-slider-group{margin-bottom:14px;}
+  .dim-slider-group label{font-size:0.82rem;font-weight:600;color:#374060;display:block;margin-bottom:6px;}
+  .slider-row{display:flex;align-items:center;gap:12px;}
+  .slider-row input[type=range]{flex:1;accent-color:#3949ab;height:4px;cursor:pointer;}
+  .slider-val{min-width:28px;font-size:0.95rem;font-weight:700;text-align:center;color:#3949ab;}
+  .scale-labels{display:flex;justify-content:space-between;font-size:0.7rem;color:#9fa8da;margin-top:2px;}
+
+  .dim-avg{background:#f0f4ff;border-radius:8px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;gap:10px;}
+  .dim-avg .label{font-size:0.78rem;color:#5c6bc0;font-weight:600;flex:1;}
+  .dim-avg .score{font-size:1.4rem;font-weight:800;}
+
+  .card-box{background:#fff;border-radius:14px;box-shadow:0 2px 12px #0000000d;padding:24px;margin-bottom:20px;}
+  .card-box h3{font-size:0.9rem;font-weight:700;color:#1a237e;margin-bottom:16px;letter-spacing:0.04em;text-transform:uppercase;}
+
+  .radar-wrap{position:relative;width:100%;height:280px;}
+
+  .overall-score{text-align:center;padding:8px 0 16px;}
+  .overall-num{font-size:3.5rem;font-weight:800;line-height:1;}
+  .overall-label{font-size:0.8rem;color:#9fa8da;margin-top:4px;}
+  .overall-level{display:inline-block;margin-top:8px;padding:4px 16px;border-radius:20px;font-size:0.82rem;font-weight:700;}
+
+  .gap-item{padding:12px 0;border-bottom:1px solid #f0f2fa;}
+  .gap-item:last-child{border:none;}
+  .gap-item-header{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .gap-icon{font-size:1rem;}
+  .gap-title{font-size:0.85rem;font-weight:700;color:#1a237e;flex:1;}
+  .gap-score{font-size:0.85rem;font-weight:800;}
+  .gap-rec{font-size:0.8rem;color:#5c6bc0;line-height:1.5;}
+
+  .score-1{color:#c62828;}
+  .score-2{color:#e65100;}
+  .score-3{color:#f9a825;}
+  .score-4{color:#2e7d32;}
+  .score-5{color:#1565c0;}
+
+  .level-beginning{background:#ffebee;color:#c62828;}
+  .level-developing{background:#fff3e0;color:#e65100;}
+  .level-emerging{background:#fffde7;color:#f9a825;}
+  .level-advancing{background:#e8f5e9;color:#2e7d32;}
+  .level-leading{background:#e3f2fd;color:#1565c0;}
+
+  .dim-bar-row{display:flex;align-items:center;gap:10px;margin:6px 0;}
+  .dim-bar-label{font-size:0.75rem;color:#374060;width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .dim-bar-track{flex:1;background:#e8edf8;border-radius:4px;height:8px;}
+  .dim-bar-fill{height:8px;border-radius:4px;transition:width 0.5s;}
+  .dim-bar-score{font-size:0.75rem;font-weight:700;min-width:24px;text-align:right;}
+
+  .cc{max-width:1200px;margin:0 auto;padding:24px 24px 40px;font-size:0.78rem;color:#5c6bc0;border-top:1px solid #e8edf8;}
+  .cc a{color:#3949ab;text-decoration:none;}
+  .cc a:hover{text-decoration:underline;}
+  .cc .row{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center;}
+
+  @media print{
+    .main{grid-template-columns:1fr;}
+    .sidebar{order:-1;}
+    body{background:#fff;}
+  }
+  @media(max-width:860px){
+    .main{grid-template-columns:1fr;padding:20px 12px 40px;}
+    header{padding:24px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>HR AI Maturity Checklist</h1>
+  <p>Score your organization across 5 dimensions of HR AI readiness. Built for CHROs and people analytics leads. Radar chart updates live. Gap analysis surfaces highest-priority improvements.</p>
+  <div class="header-meta">
+    <div><label>Organization</label><input type="text" placeholder="Company / BU name"></div>
+    <div><label>Assessor</label><input type="text" placeholder="Name and Role"></div>
+    <div><label>Date</label><input type="text" placeholder="YYYY-MM-DD"></div>
+    <button class="btn-print" onclick="window.print()">🖨️ Print / PDF</button>
+  </div>
+</header>
+
+<div class="main">
+  <div class="dimensions" id="dimensions">
+    <!-- Generated by JS -->
+  </div>
+
+  <div class="sidebar">
+    <div class="card-box">
+      <h3>Overall Maturity Radar</h3>
+      <div class="overall-score">
+        <div class="overall-num" id="overallNum">—</div>
+        <div class="overall-label">Overall Score (out of 5)</div>
+        <div class="overall-level" id="overallLevel">—</div>
+      </div>
+      <div class="radar-wrap">
+        <canvas id="radarChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <h3>Dimension Summary</h3>
+      <div id="barSummary"></div>
+    </div>
+
+    <div class="card-box">
+      <h3>Gap Analysis &amp; Recommendations</h3>
+      <div id="gapAnalysis"></div>
+    </div>
+  </div>
+</div>
+
+<footer class="cc">
+  <div class="row">
+    <div>© gmanch94 · CC-BY-4.0 · <a href="https://github.com/gmanch94/ai-architect-showcase">github.com/gmanch94/ai-architect-showcase</a></div>
+    <div>Companion: <a href="readiness-scorecard.html">general AI readiness scorecard</a> · <a href="executive-briefing.html">executive briefing</a> · <a href="ai-strategy-framework.md">strategy framework</a></div>
+  </div>
+  <div style="margin-top:10px;font-size:0.74rem;opacity:0.85;">
+    Sources: EEOC Uniform Guidelines on Employee Selection (4/5ths rule) · GDPR Art. 22 · NYC Local Law 144 (2023) · Illinois AI Video Interview Act (820 ILCS 42) · NIST AI RMF (2023) · EU AI Act (Reg 2024/1689). Explainability methods: Lundberg &amp; Lee 2017 (SHAP, NeurIPS); Ribeiro, Singh, Guestrin 2016 (LIME, KDD).
+  </div>
+</footer>
+
+<script>
+const DIMS = [
+  {
+    id: 'data',
+    icon: '🗄️',
+    color: '#3949ab',
+    bgColor: '#e8edf8',
+    title: 'Data Foundation',
+    sub: 'Quality, coverage, and governance of HR data assets',
+    questions: [
+      { label: 'Data completeness: Key HR data (hiring, performance, attrition, engagement) is fully captured and stored in accessible systems.' },
+      { label: 'Data quality: Records are clean, consistent, and updated regularly. Duplicate and missing-value rates are monitored.' },
+      { label: 'Data integration: HR data from disparate systems (ATS, HRIS, LMS, payroll) can be joined for analysis.' },
+      { label: 'Historical depth: We have at least 3 years of labeled historical data for key outcomes (who succeeded, who left, who was promoted).' },
+      { label: 'Data governance: Data ownership, access controls, retention schedules, and privacy compliance (GDPR/CCPA) are documented and enforced.' },
+    ],
+    recs: {
+      1: 'URGENT: Audit all HR data sources. Identify and close critical gaps. Assign a data steward. No AI model can compensate for missing data.',
+      2: 'Prioritize data quality remediation. Implement data validation at entry points. Consolidate fragmented systems into a single HR data warehouse.',
+      3: 'Focus on integration: build or buy an HR data lake. Establish data governance policies and begin documenting lineage.',
+      4: 'Good foundation. Extend to real-time data feeds and predictive feature stores. Explore federated learning for privacy-sensitive data.',
+      5: 'Excellent. Share data architecture patterns internally and explore external data partnerships (labor market, skills taxonomies).',
+    }
+  },
+  {
+    id: 'literacy',
+    icon: '🧠',
+    color: '#7b1fa2',
+    bgColor: '#f3e5f5',
+    title: 'Algorithmic Literacy',
+    sub: 'HR team understanding of AI/ML concepts and limitations',
+    questions: [
+      { label: 'HR leaders can explain what a predictive model does and does not do (probabilities, not certainties; patterns, not causation).' },
+      { label: 'Recruiters and managers understand that ML accuracy in HR rarely exceeds 50% of variance explained — and what that means for their decisions.' },
+      { label: 'HR teams can identify when a model prediction is implausible and know how to challenge or override it.' },
+      { label: 'The team understands the training → validation → deployment lifecycle and why models drift over time.' },
+      { label: 'HR has a process for evaluating vendor AI claims, including requesting model cards, bias testing, and explainability documentation.' },
+    ],
+    recs: {
+      1: 'Mandatory AI literacy baseline for all HR staff. No AI deployment without it. Cover: what models predict, where they fail, who owns the decision.',
+      2: 'Run internal workshops on how models work (training data, features, overfitting). Frame predictions as probability shifts, not verdicts.',
+      3: 'Develop HR-specific AI literacy curriculum. Train recruiter/manager cohorts on model interpretation and override protocols.',
+      4: 'Establish an internal AI learning community. Document institutional knowledge. Rotate HR staff through People Analytics team.',
+      5: 'Excellent. Contribute to external AI literacy initiatives. Formalize certification for HR roles that interact with AI tools.',
+    }
+  },
+  {
+    id: 'bias',
+    icon: '⚖️',
+    color: '#c62828',
+    bgColor: '#ffebee',
+    title: 'Bias & Fairness Controls',
+    sub: 'Processes to detect, measure, and mitigate algorithmic bias',
+    questions: [
+      { label: 'All AI-assisted HR decisions are tested for EEOC disparate impact (4/5ths rule) by protected class before deployment.' },
+      { label: 'A proxy variable audit is conducted for all model features to identify inputs that correlate with race, gender, age, or disability.' },
+      { label: 'The organization has explicitly chosen a primary fairness criterion (demographic parity / equalized odds / individual fairness) and documented the rationale.' },
+      { label: 'Bias test results are reviewed quarterly. Any group falling below the 4/5ths threshold triggers remediation before continued use.' },
+      { label: 'An independent bias audit (internal or external) is conducted annually for high-stakes AI tools (hiring, promotion, performance). NYC LL 144 requires this for automated employment decision tools.' },
+    ],
+    recs: {
+      1: 'CRITICAL RISK: Halt or pause AI-assisted decisions until baseline bias testing is in place. EEOC disparate impact liability is immediate; NYC LL 144 mandates published audit summaries.',
+      2: 'Adopt a bias audit template for every live AI HR tool. Start with hiring screening — highest legal exposure and clearest 4/5ths benchmark.',
+      3: 'Formalize the bias testing cadence. Assign ownership. Choose fairness criteria explicitly per use case.',
+      4: 'Mature process. Add independent auditor review for high-stakes tools. Track regulatory deltas (EU AI Act high-risk classifications include employment).',
+      5: 'Leading practice. Consider publishing annual AI Fairness Report for transparency and talent brand differentiation.',
+    }
+  },
+  {
+    id: 'explainability',
+    icon: '🔍',
+    color: '#1565c0',
+    bgColor: '#e3f2fd',
+    title: 'Explainability & Compliance',
+    sub: 'Ability to explain AI decisions and meet regulatory requirements',
+    questions: [
+      { label: 'Every AI-assisted individual decision (hiring, promotion, termination) can generate a plain-language explanation of the key factors.' },
+      { label: 'SHAP (Lundberg & Lee 2017), LIME (Ribeiro et al. 2016), or equivalent XAI methods are implemented for all classification models used in individual HR decisions.' },
+      { label: 'Candidates and employees have a clear mechanism to request an explanation of how AI influenced a decision about them (GDPR Art. 22 compliant).' },
+      { label: 'Legal and HR are familiar with applicable regulations: GDPR Art. 22, CCPA, NYC LL 144, Illinois AI Video Interview Act, EU AI Act employment provisions.' },
+      { label: 'Model documentation (model cards, data cards) is maintained for every deployed HR AI tool, updated with each model version.' },
+    ],
+    recs: {
+      1: 'COMPLIANCE RISK: GDPR Art. 22 requires human review of automated decisions with significant effects. Implement immediately for any EU employees or applicants.',
+      2: 'Prioritize explainability tooling (SHAP integration). Create a regulatory compliance register for all jurisdictions you operate in.',
+      3: 'Implement candidate/employee right-to-explanation workflow. Train HR on responding to explanation requests within GDPR timeframes (one month).',
+      4: 'Good compliance posture. Add model card documentation and a regulatory change monitoring process (EU AI Act timeline; state-level US legislation).',
+      5: 'Excellent. Proactively engage with emerging AI regulation. Consider a public-facing AI transparency commitment.',
+    }
+  },
+  {
+    id: 'change',
+    icon: '🚀',
+    color: '#2e7d32',
+    bgColor: '#e8f5e9',
+    title: 'Change Management',
+    sub: 'Organizational readiness to adopt and sustain AI-augmented HR',
+    questions: [
+      { label: 'Senior HR and business leaders actively champion AI adoption and allocate dedicated budget and headcount for People Analytics.' },
+      { label: 'Managers and employees trust AI-assisted processes — they understand what AI is doing and that human judgment still governs final decisions.' },
+      { label: 'A human override mechanism exists for every AI tool, is clearly communicated to users, and override rates are monitored.' },
+      { label: 'Change management (training, communications, feedback loops) accompanies every AI tool rollout — not just IT deployment.' },
+      { label: 'The organization measures AI tool adoption and impact (not just deployment). KPIs include time-to-fill, attrition rate, bias metrics, and user satisfaction.' },
+    ],
+    recs: {
+      1: 'Focus on leadership alignment before any AI deployment. Without executive buy-in and manager trust, AI tools will be ignored or misused.',
+      2: 'Run targeted change management for the most critical AI tool in production. Demonstrate value and build a success story to expand from.',
+      3: 'Formalize an AI adoption framework. Make human override explicit in every tool. Track and celebrate impact metrics.',
+      4: 'Strong change management. Extend to include employee-facing explainability communications. Add AI tool satisfaction surveys.',
+      5: 'Excellent. Document and share your change management playbook. Consider external publication for employer brand benefit.',
+    }
+  },
+];
+
+const scores = {};
+DIMS.forEach(d=>{ scores[d.id] = [3,3,3,3,3]; });
+
+const ctx = document.getElementById('radarChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'radar',
+  data: {
+    labels: DIMS.map(d=>d.title),
+    datasets: [{
+      label: 'Maturity Score',
+      data: DIMS.map(()=>3),
+      backgroundColor: 'rgba(57,73,171,0.15)',
+      borderColor: '#3949ab',
+      borderWidth: 2.5,
+      pointBackgroundColor: '#3949ab',
+      pointRadius: 5,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      r: {
+        min: 0, max: 5,
+        ticks: { stepSize: 1, font: {size:11}, color:'#9fa8da' },
+        grid: { color: '#e8edf8' },
+        pointLabels: { font: {size:11, weight:'bold'}, color:'#374060' },
+        angleLines: { color: '#e8edf8' },
+      }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+
+function dimAvg(id){ const s=scores[id]; return s.reduce((a,b)=>a+b,0)/s.length; }
+function overall(){ return DIMS.reduce((a,d)=>a+dimAvg(d.id),0)/DIMS.length; }
+
+function levelName(s){
+  if(s<1.5) return ['Beginning','level-beginning'];
+  if(s<2.5) return ['Developing','level-developing'];
+  if(s<3.5) return ['Emerging','level-emerging'];
+  if(s<4.5) return ['Advancing','level-advancing'];
+  return ['Leading','level-leading'];
+}
+function scoreClass(s){ return 'score-'+Math.round(s); }
+
+function updateUI(){
+  const ov = overall();
+  document.getElementById('overallNum').textContent = ov.toFixed(1);
+  const [lv,lc] = levelName(ov);
+  const lvEl = document.getElementById('overallLevel');
+  lvEl.textContent = lv;
+  lvEl.className = 'overall-level ' + lc;
+
+  chart.data.datasets[0].data = DIMS.map(d=>parseFloat(dimAvg(d.id).toFixed(2)));
+  chart.update();
+
+  const barDiv = document.getElementById('barSummary');
+  barDiv.innerHTML = DIMS.map(d=>{
+    const avg = dimAvg(d.id);
+    const pct = avg/5*100;
+    return `<div class="dim-bar-row">
+      <span class="dim-bar-label">${d.icon} ${d.title}</span>
+      <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${pct}%;background:${d.color};"></div></div>
+      <span class="dim-bar-score ${scoreClass(avg)}">${avg.toFixed(1)}</span>
+    </div>`;
+  }).join('');
+
+  const sorted = [...DIMS].sort((a,b)=>dimAvg(a.id)-dimAvg(b.id));
+  const gapDiv = document.getElementById('gapAnalysis');
+  gapDiv.innerHTML = sorted.map(d=>{
+    const avg = dimAvg(d.id);
+    const tier = Math.round(avg);
+    const rec = d.recs[Math.max(1,Math.min(5,tier))];
+    const [lv] = levelName(avg);
+    return `<div class="gap-item">
+      <div class="gap-item-header">
+        <span class="gap-icon">${d.icon}</span>
+        <span class="gap-title">${d.title}</span>
+        <span class="gap-score ${scoreClass(avg)}">${avg.toFixed(1)} — ${lv}</span>
+      </div>
+      <p class="gap-rec">${rec}</p>
+    </div>`;
+  }).join('');
+
+  DIMS.forEach(d=>{
+    const badge = document.getElementById('badge-'+d.id);
+    if(badge){
+      const avg = dimAvg(d.id);
+      badge.textContent = avg.toFixed(1);
+      badge.className = 'dim-score-badge ' + scoreClass(avg);
+    }
+    const avgEl = document.getElementById('avg-'+d.id);
+    if(avgEl){
+      const avg = dimAvg(d.id);
+      avgEl.textContent = avg.toFixed(1);
+      avgEl.className = 'score ' + scoreClass(avg);
+    }
+  });
+}
+
+const dimDiv = document.getElementById('dimensions');
+DIMS.forEach((d,di)=>{
+  const card = document.createElement('div');
+  card.className = 'dim-card';
+  const qs = d.questions.map((q,qi)=>`
+    <div class="dim-slider-group">
+      <label>${qi+1}. ${q.label}</label>
+      <div class="slider-row">
+        <input type="range" min="1" max="5" step="1" value="3"
+          oninput="scores['${d.id}'][${qi}]=parseInt(this.value);this.nextElementSibling.textContent=this.value;updateUI();">
+        <span class="slider-val">3</span>
+      </div>
+      <div class="scale-labels"><span>1 — None</span><span>3 — Partial</span><span>5 — Leading</span></div>
+    </div>
+  `).join('');
+
+  card.innerHTML = `
+    <div class="dim-header" onclick="toggleDim(this)" style="background:${d.bgColor};">
+      <div class="dim-icon" style="background:${d.color}22;">${d.icon}</div>
+      <div class="dim-title-block">
+        <div class="dim-title">${d.title}</div>
+        <div class="dim-sub">${d.sub}</div>
+      </div>
+      <div class="dim-score-badge score-3" id="badge-${d.id}">3.0</div>
+    </div>
+    <div class="dim-body ${di===0?'open':''}" id="body-${d.id}">
+      ${qs}
+      <div class="dim-avg">
+        <span class="label">Dimension Average</span>
+        <span class="score score-3" id="avg-${d.id}">3.0</span><span style="font-size:0.8rem;color:#5c6bc0;margin-left:4px;">/ 5</span>
+      </div>
+    </div>
+  `;
+  dimDiv.appendChild(card);
+});
+
+function toggleDim(hdr){
+  const bodyId = 'body-' + hdr.querySelector('[id^=badge-]').id.replace('badge-','');
+  const body = document.getElementById(bodyId);
+  body.classList.toggle('open');
+}
+
+updateUI();
+</script>
+</body>
+</html>

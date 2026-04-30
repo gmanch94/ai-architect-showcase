@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI for Executives — Briefing</title>
+<style>
+  :root { --c1:#2196F3; --c2:#4CAF50; --c3:#FF9800; --c5:#9C27B0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #111; color: #fff; overflow: hidden; }
+  .deck { width: 100vw; height: 100vh; position: relative; }
+  .slide { position: absolute; inset: 0; padding: 60px 80px; display: none; flex-direction: column; justify-content: center; }
+  .slide.active { display: flex; }
+  .slide.dark { background: #111; color: #fff; }
+  .slide.light { background: #fafafa; color: #222; }
+  .slide.t1 { border-top: 8px solid var(--c1); }
+  .slide.t2 { border-top: 8px solid var(--c2); }
+  .slide.t3 { border-top: 8px solid var(--c3); }
+  .slide.t5 { border-top: 8px solid var(--c5); }
+  .slide h1 { font-size: 56px; line-height: 1.1; margin-bottom: 24px; font-weight: 700; }
+  .slide h2 { font-size: 36px; margin-bottom: 18px; font-weight: 600; }
+  .slide h3 { font-size: 24px; color: #888; margin-bottom: 16px; font-weight: 400; }
+  .slide p { font-size: 22px; line-height: 1.5; margin-bottom: 16px; max-width: 980px; }
+  .slide ul { font-size: 22px; line-height: 1.7; padding-left: 28px; }
+  .slide li { margin-bottom: 8px; }
+  .slide .quote { font-size: 32px; font-style: italic; line-height: 1.4; max-width: 900px; margin-top: 24px; }
+  .slide .attr { font-size: 18px; color: #888; margin-top: 12px; }
+  .slide .stat { font-size: 96px; font-weight: 700; line-height: 1; margin: 16px 0; }
+  .slide .stat.t5 { color: var(--c5); }
+  .slide .stat.t1 { color: var(--c1); }
+  .slide .stat.t2 { color: var(--c2); }
+  .slide .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 24px; }
+  .slide .grid-2 .col { padding: 20px; background: rgba(255,255,255,0.05); border-radius: 8px; }
+  .slide.light .grid-2 .col { background: rgba(0,0,0,0.04); }
+  .slide .grid-2 h4 { font-size: 22px; margin-bottom: 10px; }
+  .slide .grid-2 p { font-size: 18px; }
+  .slide .badge { display: inline-block; padding: 4px 14px; border-radius: 14px; font-size: 14px; margin-bottom: 16px; font-weight: 600; }
+  .slide.t1 .badge { background: var(--c1); color: white; }
+  .slide.t2 .badge { background: var(--c2); color: white; }
+  .slide.t3 .badge { background: var(--c3); color: white; }
+  .slide.t5 .badge { background: var(--c5); color: white; }
+  .slide .footer { position: absolute; bottom: 24px; left: 80px; right: 80px; display: flex; justify-content: space-between; font-size: 13px; color: #666; }
+  .nav { position: fixed; bottom: 16px; right: 24px; display: flex; gap: 6px; z-index: 100; }
+  .nav button { padding: 6px 12px; background: rgba(255,255,255,0.1); border: 0; color: #fff; border-radius: 4px; cursor: pointer; font-size: 13px; }
+  .nav button:hover { background: rgba(255,255,255,0.2); }
+  .progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--c1); transition: width 0.3s; z-index: 100; }
+  table { width: 100%; border-collapse: collapse; font-size: 18px; margin-top: 16px; }
+  table th, table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.15); }
+  .light table th, .light table td { border-bottom: 1px solid #ddd; }
+  table th { font-weight: 600; }
+  @media print {
+    .nav, .progress { display: none; }
+    .slide { display: flex !important; page-break-after: always; }
+    body { background: white; color: black; }
+    .slide.dark { background: white; color: black; }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="deck">
+
+<div class="slide dark active">
+  <h1>AI for Executives</h1>
+  <h3>A 10-slide brief for non-technical leaders</h3>
+  <p style="color:#aaa;">What AI is, what it can do for your business, and what to demand of your team.</p>
+  <div class="footer"><span>© gmanch94 · CC-BY-4.0 · github.com/gmanch94/ai-architect-showcase</span><span>Slide 1 / 10</span></div>
+</div>
+
+<div class="slide light t1">
+  <span class="badge">Introduction</span>
+  <h2>AI is the next general-purpose technology</h2>
+  <p>Like steam, electricity, internet, and mobile before it.</p>
+  <table>
+    <tr><th>Wave</th><th>Era</th><th>Defining shift</th></tr>
+    <tr><td>Internet</td><td>Late 1990s</td><td>Connectivity</td></tr>
+    <tr><td>Cloud</td><td>Mid 2000s</td><td>Scalable infrastructure</td></tr>
+    <tr><td>Mobile</td><td>Late 2000s</td><td>Always-on, contextual</td></tr>
+    <tr><td><strong>AI</strong></td><td><strong>Now</strong></td><td><strong>Cognitive automation</strong></td></tr>
+  </table>
+  <p style="margin-top:24px; color: #555;">Companies slow to react in each prior wave paid the price. The AI wave will be no different.</p>
+  <div class="footer"><span>AI as general-purpose technology · Brynjolfsson, Rock, Syverson 2017 NBER</span><span>Slide 2 / 10</span></div>
+</div>
+
+<div class="slide dark t2">
+  <span class="badge">ML Methods</span>
+  <h2>The ML toolbox you'll be reviewing</h2>
+  <table>
+    <tr><th>Method</th><th>Best for</th><th>Demand it for</th></tr>
+    <tr><td>Logistic Regression</td><td>Yes/no, small clean data</td><td>Always — the baseline</td></tr>
+    <tr><td>Decision Tree</td><td>Readable rules</td><td>Regulated decisions</td></tr>
+    <tr><td>Random Forest / XGBoost</td><td>Tabular default</td><td>Most business prediction</td></tr>
+    <tr><td>Neural Network / Deep Learning</td><td>Images, audio, text, complex</td><td>Unstructured data</td></tr>
+    <tr><td>LLM + RAG / Fine-tuning</td><td>Generation tasks</td><td>Knowledge work, copilots</td></tr>
+  </table>
+  <p style="margin-top:20px; color:#aaa;">Anchor question to your team: <em>"What's the simplest model that meets the bar?"</em></p>
+  <div class="footer"><span>Method selection · always start with the baseline</span><span>Slide 3 / 10</span></div>
+</div>
+
+<div class="slide light t2">
+  <span class="badge">Anchor Doctrine</span>
+  <h2>Data &gt; Models</h2>
+  <div class="quote">"Performance differences between algorithms are relatively small when compared to differences between same algorithms with more or less data."</div>
+  <p class="attr">— Halevy, Norvig, Pereira (2009), <em>The Unreasonable Effectiveness of Data</em>, IEEE Intelligent Systems 24(2)</p>
+  <p style="margin-top:32px;"><strong>Strategic implication:</strong> invest in data infrastructure, labeling, and quality before fancy algorithms. The "unreasonable effectiveness of data" is the leverage point.</p>
+  <div class="footer"><span>Anchor doctrine · Halevy/Norvig/Pereira 2009</span><span>Slide 4 / 10</span></div>
+</div>
+
+<div class="slide dark t3">
+  <span class="badge">NLP</span>
+  <h2>Most enterprise data is text. Most enterprises ignore it.</h2>
+  <ul>
+    <li>Customer reviews, support tickets, emails, contracts, transcripts, documents</li>
+    <li>NLP turns this unstructured corpus into features → predictions</li>
+    <li>Sentiment, topic modeling, named entity, classification — all off-the-shelf</li>
+    <li>Modern path: embeddings + vector search + LLM (RAG) — no labels required</li>
+  </ul>
+  <p style="margin-top:24px; color: #aaa;">Pick one NLP use case (sentiment of churn signals, topic of support tickets, RAG over your knowledge base) and ship it end-to-end this quarter.</p>
+  <div class="footer"><span>NLP business value · embeddings + RAG default path</span><span>Slide 5 / 10</span></div>
+</div>
+
+<div class="slide light t5">
+  <span class="badge">Generative AI</span>
+  <h2>Productivity Impact</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;">
+    <div>
+      <div class="stat t5">80%</div>
+      <p>of US workforce will see ≥ 10% of tasks affected by LLMs</p>
+    </div>
+    <div>
+      <div class="stat t5">19%</div>
+      <p>will see ≥ 50% of their tasks impacted</p>
+    </div>
+  </div>
+  <p style="margin-top:24px;"><strong>Most exposed groups:</strong> legal, scientists, architects, engineers, tech workers, managers. Translation: knowledge work, including yours.</p>
+  <div class="footer"><span>Eloundou, Manning, Mishkin, Rock 2023 · <em>GPTs are GPTs</em> · arXiv:2303.10130</span><span>Slide 6 / 10</span></div>
+</div>
+
+<div class="slide dark t5">
+  <span class="badge">GenAI Stack</span>
+  <h2>The 4-layer GenAI stack</h2>
+  <table>
+    <tr><th>Layer</th><th>Players</th><th>Your move</th></tr>
+    <tr><td>4. Applications</td><td>Copilot, Cursor, Notion AI, Sudowrite</td><td><strong>Default play for most</strong></td></tr>
+    <tr><td>3. Fine-tuned models</td><td>RAG systems, BloombergGPT, Med-PaLM</td><td>If you have proprietary data</td></tr>
+    <tr><td>2. Foundation models</td><td>OpenAI, Anthropic, Google, Meta</td><td>Buy via API. Use ≥ 2 providers.</td></tr>
+    <tr><td>1. Compute infrastructure</td><td>Nvidia, TSMC, AWS / Azure / GCP</td><td>Buy from hyperscaler</td></tr>
+  </table>
+  <p style="margin-top:20px; color:#aaa;"><em>Industry observation: the infra layer wins regardless of which AI applications succeed — pick-and-shovel economics.</em></p>
+  <div class="footer"><span>GenAI stack architecture</span><span>Slide 7 / 10</span></div>
+</div>
+
+<div class="slide light t5">
+  <span class="badge">RAG vs Fine-tuning</span>
+  <h2>Customize a foundation model: pick your lever</h2>
+  <div class="grid-2">
+    <div class="col">
+      <h4>RAG (Retrieval-Augmented Generation)</h4>
+      <p><strong>What:</strong> Look up relevant info from your KB, paste into prompt.<br>
+      <strong>Cost:</strong> Low<br>
+      <strong>Freshness:</strong> Real-time<br>
+      <strong>Use first when:</strong> Need to ground answers in private/factual data.</p>
+    </div>
+    <div class="col">
+      <h4>Fine-tuning</h4>
+      <p><strong>What:</strong> Train the model on your examples.<br>
+      <strong>Cost:</strong> High (compute + data + labeling)<br>
+      <strong>Freshness:</strong> Static — needs retraining<br>
+      <strong>Use only when:</strong> Domain voice/format/style requires it.</p>
+    </div>
+  </div>
+  <p style="margin-top:24px;"><strong>Default:</strong> Start with prompt engineering → RAG → only then fine-tuning.</p>
+  <div class="footer"><span>Model customization · Lewis et al. 2020 RAG · arXiv:2005.11401</span><span>Slide 8 / 10</span></div>
+</div>
+
+<div class="slide dark t5">
+  <span class="badge">GenAI Risk</span>
+  <h2>Top failure modes (and the fix)</h2>
+  <table>
+    <tr><th>Risk</th><th>Mitigation</th></tr>
+    <tr><td><strong>Hallucination</strong> — plausible falsehoods</td><td>RAG, citations, human review on critical outputs</td></tr>
+    <tr><td><strong>Bias</strong> — disparate outcomes</td><td>Audit data, fairness metrics, redteaming</td></tr>
+    <tr><td><strong>IP / plagiarism</strong></td><td>Vendor indemnity, copyright filters</td></tr>
+    <tr><td><strong>Privacy leakage</strong></td><td>No-PII prompts, on-prem or VPC deployment</td></tr>
+    <tr><td><strong>Drift</strong> — accuracy decay</td><td>Monitoring, alerts, retraining schedule</td></tr>
+    <tr><td><strong>Vendor lock-in</strong></td><td>Abstraction layer, test on 2+ models</td></tr>
+    <tr><td><strong>Over-trust</strong></td><td>Confidence calibration, friction in critical paths</td></tr>
+  </table>
+  <div class="footer"><span>Risk doctrine · aligned with NIST AI RMF (2023) + EU AI Act (Reg 2024/1689)</span><span>Slide 9 / 10</span></div>
+</div>
+
+<div class="slide light">
+  <h2>Your 90-day activation plan</h2>
+  <ul>
+    <li><strong>Weeks 0–2:</strong> Inventory existing AI use (incl. shadow IT). Map to GenAI stack layers.</li>
+    <li><strong>Weeks 2–4:</strong> Run readiness scorecard. Identify top 3 capability gaps.</li>
+    <li><strong>Weeks 4–8:</strong> Ship 1–3 productivity wins (assistant rollouts) for fast credibility.</li>
+    <li><strong>Weeks 6–10:</strong> Publish prompt cookbook + risk checklist company-wide.</li>
+    <li><strong>Weeks 8–12:</strong> Stand up AI literacy program (mindmap + glossary as teaching aids).</li>
+    <li><strong>Weeks 10–12:</strong> Charter 2–3 H2 workflow automation projects with executive sponsors.</li>
+  </ul>
+  <p style="margin-top:32px;"><strong>Companion artifacts:</strong> <a href="mindmap.html">mindmap</a> · <a href="glossary.html">glossary</a> · <a href="readiness-scorecard.html">readiness scorecard</a> · <a href="portfolio-worksheet.html">portfolio worksheet</a> · <a href="case-study-library.html">case study library</a> · <a href="ai-strategy-framework.md">strategy framework</a> · <a href="hr-maturity-checklist.html">HR maturity checklist</a></p>
+  <div class="footer"><span>© gmanch94 · CC-BY-4.0 · github.com/gmanch94/ai-architect-showcase</span><span>Slide 10 / 10</span></div>
+</div>
+
+</div>
+
+<div class="nav">
+  <button onclick="prev()">← Prev</button>
+  <span id="counter" style="padding: 6px 12px; color: #aaa; font-size: 13px;">1 / 10</span>
+  <button onclick="next()">Next →</button>
+  <button onclick="window.print()">Print</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let idx = 0;
+function show(i) {
+  slides.forEach((s, n) => s.classList.toggle('active', n === i));
+  document.getElementById('counter').textContent = `${i+1} / ${slides.length}`;
+  document.getElementById('progress').style.width = `${((i+1)/slides.length)*100}%`;
+}
+function next() { idx = Math.min(slides.length - 1, idx + 1); show(idx); }
+function prev() { idx = Math.max(0, idx - 1); show(idx); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') next();
+  if (e.key === 'ArrowLeft') prev();
+  if (e.key === 'Home') { idx = 0; show(0); }
+  if (e.key === 'End') { idx = slides.length - 1; show(idx); }
+});
+show(0);
+</script>
+</body>
+</html>
