@@ -41,11 +41,20 @@ These are the public-facing executive companions to the architect-grade operatio
 
 ## How to view
 
-These are static HTML/Markdown files. **No build, no server, no GitHub Pages.** Choose any:
+Live at **https://gmanch94.github.io/ai-architect-showcase/** — direct in-browser preview, JS executes, print-to-PDF works.
 
-1. **Download:** click an artifact → "Download raw file" → open locally in a browser. Works offline (most files; mindmap and a few use CDN-hosted libraries that need internet on first load).
-2. **Raw URL:** open via `https://raw.githack.com/gmanch94/ai-architect-showcase/main/artifacts/<filename>.html` for a one-click in-browser preview that runs JS.
-3. **Fork:** clone the repo, customize for your org, host wherever you want.
+Direct artifact links:
+
+- [Executive briefing (deck)](https://gmanch94.github.io/ai-architect-showcase/artifacts/executive-briefing.html)
+- [Readiness scorecard](https://gmanch94.github.io/ai-architect-showcase/artifacts/readiness-scorecard.html)
+- [HR maturity checklist](https://gmanch94.github.io/ai-architect-showcase/artifacts/hr-maturity-checklist.html)
+- [Portfolio worksheet](https://gmanch94.github.io/ai-architect-showcase/artifacts/portfolio-worksheet.html)
+- [Mindmap](https://gmanch94.github.io/ai-architect-showcase/artifacts/mindmap.html)
+- [Case study library](https://gmanch94.github.io/ai-architect-showcase/artifacts/case-study-library.html)
+- [Glossary](https://gmanch94.github.io/ai-architect-showcase/artifacts/glossary.html)
+- [Strategy framework](https://github.com/gmanch94/ai-architect-showcase/blob/main/artifacts/ai-strategy-framework.md) (Markdown — renders on GitHub)
+
+Or **fork** the repo, customize for your org, host wherever you want.
 
 ---
 
