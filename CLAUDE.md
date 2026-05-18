@@ -50,6 +50,7 @@ ai-architect-showcase/
 │   ├── mindmap.html
 │   ├── case-study-library.html
 │   ├── glossary.html
+│   ├── communication-strategy.html
 │   └── ai-strategy-framework.md
 └── .claude/
     └── settings.json          ← Pre-allowed safe operations
