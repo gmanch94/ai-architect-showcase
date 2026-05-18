@@ -125,3 +125,18 @@ Skip steps only with explicit agreement.
 - `/retro` — retrospective; reviews recent commits; writes lessons to LESSONS_LEARNED.md
 
 **Permissions:** `.claude/settings.json` pre-allows safe read-only operations so they never prompt. Write/Edit/Bash remain prompt-required — add to `settings.local.json` (gitignored) for your machine.
+
+---
+
+## Worktree cleanup (after merge)
+
+Worktrees are created externally by the harness — `ExitWorktree` won't work. After a branch is merged and remote deleted, clean up from the **main repo directory**:
+
+```powershell
+cd "C:/Users/giris/Documents/GitHub/ai-architect-showcase"
+git fetch --prune
+git worktree prune
+git branch -d <branch-name>
+```
+
+If the worktree folder still exists (e.g. locked by a running session), delete it manually then run `git worktree prune`.
