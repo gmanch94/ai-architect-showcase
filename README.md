@@ -20,6 +20,7 @@ These are the public-facing executive companions to the architect-grade operatio
 | A CIO / CDO sizing organizational readiness | [`readiness-scorecard.html`](artifacts/readiness-scorecard.html) → [`ai-strategy-framework.md`](artifacts/ai-strategy-framework.md) |
 | A strategy lead building an AI portfolio | [`portfolio-worksheet.html`](artifacts/portfolio-worksheet.html) → [`case-study-library.html`](artifacts/case-study-library.html) |
 | A CHRO / people analytics lead | [`hr-maturity-checklist.html`](artifacts/hr-maturity-checklist.html) → [`readiness-scorecard.html`](artifacts/readiness-scorecard.html) |
+| A change leader communicating an AI initiative | [`communication-strategy.html`](artifacts/communication-strategy.html) → [`executive-briefing.html`](artifacts/executive-briefing.html) |
 | Anyone learning the AI vocabulary | [`glossary.html`](artifacts/glossary.html) |
 
 ---
@@ -36,6 +37,7 @@ These are the public-facing executive companions to the architect-grade operatio
 | [`case-study-library.html`](artifacts/case-study-library.html) | Reference | 14 case study cards (Zillow, Netflix, Klarna, Air Canada, GitHub Copilot, Bloomberg GPT, etc.) with topic filter + full-text search. Each card: situation, lesson, tags. |
 | [`glossary.html`](artifacts/glossary.html) | Reference | 50+ AI terms in plain English, grouped by topic, filterable + searchable. "Use when…" guidance on every term. |
 | [`hr-maturity-checklist.html`](artifacts/hr-maturity-checklist.html) | Self-assessment | HR-specific maturity model. 5 dimensions (data foundation, algorithmic literacy, bias controls, explainability/compliance, change management) × 5 questions each. Live radar + gap analysis. EEOC 4/5ths, GDPR Art. 22, NYC LL 144, EU AI Act anchored. |
+| [`communication-strategy.html`](artifacts/communication-strategy.html) | Planning tool | Select an AI initiative archetype (8 options) → edit Rider / Elephant / Path levers → get a formatted communication plan + talking points. Print to PDF or copy talking points. Based on Heath & Heath, *Switch* (2010). |
 
 ---
 
@@ -53,6 +55,7 @@ Direct artifact links:
 - [Case study library](https://gmanch94.github.io/ai-architect-showcase/artifacts/case-study-library.html)
 - [Glossary](https://gmanch94.github.io/ai-architect-showcase/artifacts/glossary.html)
 - [Strategy framework](https://github.com/gmanch94/ai-architect-showcase/blob/main/artifacts/ai-strategy-framework.md) (Markdown — renders on GitHub)
+- [Communication strategy framework](https://gmanch94.github.io/ai-architect-showcase/artifacts/communication-strategy.html)
 
 Or **fork** the repo, customize for your org, host wherever you want.
 

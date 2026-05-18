@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Communication Strategy Framework</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f6fa;color:#1a1f2e;min-height:100vh;}
+
+  /* ── Header ── */
+  header{background:linear-gradient(135deg,#1a237e,#3949ab);color:#fff;padding:36px 48px 28px;}
+  header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px;}
+  header p{font-size:0.9rem;opacity:0.85;max-width:680px;line-height:1.6;}
+  .header-meta{display:flex;gap:32px;margin-top:18px;flex-wrap:wrap;align-items:center;}
+  .header-meta label{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.65;display:block;margin-bottom:4px;}
+  .header-meta input{background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.4);color:#fff;font-size:0.9rem;width:220px;padding:2px 0;outline:none;}
+  .header-meta input::placeholder{color:rgba(255,255,255,0.4);}
+  .btn-print{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:8px 20px;border-radius:8px;font-size:0.85rem;cursor:pointer;font-weight:600;}
+  .btn-print:hover{background:rgba(255,255,255,0.25);}
+  .btn-print:focus{outline:2px solid rgba(255,255,255,0.6);outline-offset:2px;}
+
+  /* ── Two-column grid ── */
+  .main{display:grid;grid-template-columns:1fr 420px;gap:28px;max-width:1240px;margin:0 auto;padding:36px 24px 60px;}
+
+  /* ── Left column ── */
+  .section-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px #0000000d;margin-bottom:20px;overflow:hidden;}
+
+  .archetype-block{padding:20px 24px;}
+  .archetype-block label{font-size:0.78rem;font-weight:700;color:#1a237e;letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:8px;}
+  .archetype-select{width:100%;padding:10px 14px;border:1px solid #c5cae9;border-radius:8px;font-size:0.9rem;color:#1a1f2e;background:#fff;cursor:pointer;outline:none;}
+  .archetype-select:focus{border-color:#3949ab;box-shadow:0 0 0 3px rgba(57,73,171,0.12);}
+
+  .lever-header{padding:16px 24px;display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none;}
+  .lever-header:focus{outline:2px solid #3949ab;outline-offset:-2px;}
+  .lever-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;font-weight:800;}
+  .lever-title-block{flex:1;}
+  .lever-title{font-size:0.95rem;font-weight:700;color:#1a237e;margin-bottom:2px;}
+  .lever-sub{font-size:0.75rem;color:#9fa8da;}
+  .lever-chevron{font-size:0.8rem;color:#9fa8da;transition:transform 0.2s;}
+  .lever-chevron.open{transform:rotate(180deg);}
+
+  .lever-body{padding:0 24px 20px;display:none;}
+  .lever-body.open{display:block;}
+  .lever-guide{font-size:0.78rem;color:#5c6bc0;margin-bottom:8px;line-height:1.5;}
+  .lever-textarea{width:100%;min-height:110px;padding:10px 12px;border:1px solid #c5cae9;border-radius:8px;font-size:0.85rem;color:#1a1f2e;line-height:1.6;resize:vertical;outline:none;font-family:inherit;}
+  .lever-textarea:focus{border-color:#3949ab;box-shadow:0 0 0 3px rgba(57,73,171,0.12);}
+  .lever-hint{font-size:0.72rem;color:#9fa8da;margin-top:5px;}
+
+  .rider-icon{background:#e8eaf6;color:#3949ab;}
+  .elephant-icon{background:#fce4ec;color:#c2185b;}
+  .path-icon{background:#e8f5e9;color:#2e7d32;}
+
+  .btn-generate{width:100%;padding:14px;background:#1a237e;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:4px;letter-spacing:0.02em;}
+  .btn-generate:hover{background:#283593;}
+  .btn-generate:focus{outline:2px solid #3949ab;outline-offset:2px;}
+
+  /* ── Right column — output panel ── */
+  .output-panel{position:sticky;top:28px;}
+
+  .output-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px #0000000d;padding:28px;margin-bottom:20px;}
+  .output-card h3{font-size:0.78rem;font-weight:700;color:#1a237e;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:18px;}
+
+  .plan-header{margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #e8edf8;}
+  .plan-title{font-size:1.2rem;font-weight:800;color:#1a237e;margin-bottom:4px;min-height:1.5em;}
+  .plan-meta{font-size:0.8rem;color:#5c6bc0;}
+
+  .lever-block{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid #f0f2fa;}
+  .lever-block:last-child{border:none;margin-bottom:0;padding-bottom:0;}
+  .lever-block-label{font-size:0.72rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .lever-block-label .dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;}
+  .rider-dot{background:#3949ab;}
+  .elephant-dot{background:#c2185b;}
+  .path-dot{background:#2e7d32;}
+  .lever-block-content{font-size:0.85rem;color:#374060;line-height:1.7;white-space:pre-wrap;}
+
+  .tp-block{background:#f8f9ff;border-radius:10px;padding:14px 16px;margin-bottom:12px;}
+  .tp-block:last-child{margin-bottom:0;}
+  .tp-label{font-size:0.72rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
+  .tp-list{padding-left:18px;margin:0;}
+  .tp-list li{font-size:0.82rem;color:#374060;line-height:1.6;margin-bottom:3px;}
+  .btn-copy{margin-top:8px;background:transparent;border:1px solid #c5cae9;color:#3949ab;padding:4px 12px;border-radius:6px;font-size:0.75rem;cursor:pointer;font-weight:600;}
+  .btn-copy:hover{background:#e8eaf6;}
+  .btn-copy:focus{outline:2px solid #3949ab;outline-offset:2px;}
+
+  .output-empty{text-align:center;padding:40px 20px;color:#9fa8da;}
+  .output-empty .empty-icon{font-size:2.5rem;margin-bottom:12px;}
+  .output-empty p{font-size:0.85rem;line-height:1.6;}
+
+  /* ── Footer ── */
+  .footer{max-width:1240px;margin:0 auto;padding:20px 24px 40px;font-size:0.78rem;color:#5c6bc0;border-top:1px solid #e8edf8;}
+  .footer a{color:#3949ab;text-decoration:none;}
+  .footer a:hover{text-decoration:underline;}
+
+  /* ── Print ── */
+  @media print{
+    header{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .main{grid-template-columns:1fr;display:block;}
+    #leftCol{display:none;}
+    #rightCol{display:block;width:100%;}
+    .output-panel{position:static;}
+    .output-card{box-shadow:none;border:1px solid #e8edf8;page-break-inside:avoid;}
+    .btn-copy,.btn-print{display:none;}
+    .footer{border-top:1px solid #ccc;}
+    body{background:#fff;}
+  }
+
+  /* ── Responsive ── */
+  @media(max-width:900px){
+    .main{grid-template-columns:1fr;padding:20px 12px 40px;}
+    header{padding:24px 20px;}
+    .output-panel{position:static;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AI Communication Strategy Framework</h1>
+  <p>Structure your AI initiative communications using the Rider / Elephant / Path model. Select an archetype, edit the levers to fit your organization, then generate a formatted plan and talking points.</p>
+  <div class="header-meta">
+    <div><label for="initiativeName">Initiative Name</label><input type="text" id="initiativeName" placeholder="e.g. AI-Assisted Contract Review" aria-label="Initiative name"></div>
+    <div><label for="targetAudience">Target Audience</label><input type="text" id="targetAudience" placeholder="e.g. Legal Department" aria-label="Target audience"></div>
+    <button class="btn-print" onclick="window.print()" aria-label="Print or save as PDF">Print / PDF</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Left column — form -->
+  <div id="leftCol">
+
+    <div class="section-card">
+      <div class="archetype-block">
+        <label for="archetypeSelect">Initiative Archetype</label>
+        <select id="archetypeSelect" class="archetype-select" aria-label="Select initiative archetype">
+          <option value="cost">Cost Reduction</option>
+          <option value="productivity">Productivity &amp; Speed</option>
+          <option value="cx">Customer Experience</option>
+          <option value="risk">Risk &amp; Compliance</option>
+          <option value="talent">Talent &amp; Upskilling</option>
+          <option value="data">Data Strategy</option>
+          <option value="competitive">Competitive Positioning</option>
+          <option value="governance">Governance &amp; Ethics</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Rider -->
+    <div class="section-card">
+      <div class="lever-header" tabindex="0" role="button" aria-expanded="true" aria-controls="riderBody" onclick="toggleLever('rider')" onkeydown="handleLeverKey(event,'rider')">
+        <div class="lever-icon rider-icon">R</div>
+        <div class="lever-title-block">
+          <div class="lever-title">The Rider</div>
+          <div class="lever-sub">Appeals to rational thinking — facts, plans, evidence</div>
+        </div>
+        <span class="lever-chevron open" id="riderChevron" aria-hidden="true">&#9660;</span>
+      </div>
+      <div class="lever-body open" id="riderBody">
+        <div class="lever-guide">What data, benchmarks, or logical argument makes the case?</div>
+        <textarea id="riderText" class="lever-textarea" aria-label="Rider lever content — one point per line" placeholder="One point per line&#10;e.g. AI reduces processing time by 40&#8211;60% in comparable organizations (McKinsey 2025)"></textarea>
+        <div class="lever-hint">One point per line — each line becomes a talking point bullet.</div>
+      </div>
+    </div>
+
+    <!-- Elephant -->
+    <div class="section-card">
+      <div class="lever-header" tabindex="0" role="button" aria-expanded="true" aria-controls="elephantBody" onclick="toggleLever('elephant')" onkeydown="handleLeverKey(event,'elephant')">
+        <div class="lever-icon elephant-icon">E</div>
+        <div class="lever-title-block">
+          <div class="lever-title">The Elephant</div>
+          <div class="lever-sub">Engages emotion — identity, urgency, shared purpose</div>
+        </div>
+        <span class="lever-chevron open" id="elephantChevron" aria-hidden="true">&#9660;</span>
+      </div>
+      <div class="lever-body open" id="elephantBody">
+        <div class="lever-guide">What emotional truth resonates? Avoid fear or sentimentality.</div>
+        <textarea id="elephantText" class="lever-textarea" aria-label="Elephant lever content — one point per line" placeholder="One point per line&#10;e.g. We are not cutting jobs — we are reclaiming time our people spend on work that doesn't use their expertise."></textarea>
+        <div class="lever-hint">One point per line — each line becomes a talking point bullet.</div>
+      </div>
+    </div>
+
+    <!-- Path -->
+    <div class="section-card">
+      <div class="lever-header" tabindex="0" role="button" aria-expanded="true" aria-controls="pathBody" onclick="toggleLever('path')" onkeydown="handleLeverKey(event,'path')">
+        <div class="lever-icon path-icon">P</div>
+        <div class="lever-title-block">
+          <div class="lever-title">The Path</div>
+          <div class="lever-sub">Makes it easy — clear steps, intermediate wins, low friction</div>
+        </div>
+        <span class="lever-chevron open" id="pathChevron" aria-hidden="true">&#9660;</span>
+      </div>
+      <div class="lever-body open" id="pathBody">
+        <div class="lever-guide">What is the concrete next step? What happens in 30 / 60 / 90 days?</div>
+        <textarea id="pathText" class="lever-textarea" aria-label="Path lever content — one point per line" placeholder="One point per line&#10;e.g. Pilot with one team. Measure hours saved in 30 days. Expand if threshold met."></textarea>
+        <div class="lever-hint">One point per line — each line becomes a talking point bullet.</div>
+      </div>
+    </div>
+
+    <button class="btn-generate" onclick="generatePlan()" aria-label="Generate communication plan">Generate Plan</button>
+  </div>
+
+  <!-- Right column — output -->
+  <div id="rightCol">
+    <div class="output-panel">
+
+      <div class="output-card" id="onePager">
+        <h3>Communication Plan</h3>
+        <div id="planContent">
+          <div class="output-empty">
+            <div class="empty-icon">&#128196;</div>
+            <p>Fill in the levers and click<br><strong>Generate Plan</strong> to see your formatted plan.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="output-card" id="tpCard" style="display:none;">
+        <h3>Talking Points</h3>
+        <div id="tpContent"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <span>&#169; <a href="https://github.com/gmanch94/ai-architect-showcase">gmanch94</a> &nbsp;&#183;&nbsp; <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY-4.0</a> &nbsp;&#183;&nbsp; AI Architect Showcase &nbsp;&#183;&nbsp; Based on Heath &amp; Heath, <em>Switch</em> (2010)</span>
+</div>
+
+<script>
+const ARCHETYPES = {
+  cost: {
+    rider: `AI reduces manual processing time by 40–60% in comparable organizations (McKinsey, State of AI 2025)
+Our team currently spends an estimated X hours per week on tasks AI can automate
+Peer organizations that deployed similar tools report 6-month payback periods`,
+    elephant: `We are not cutting jobs — we are reclaiming time our people spend on work that doesn’t use their expertise
+Every hour saved on low-value tasks is an hour returned to the work only your team can do
+This is about respect for your people’s time and skill`,
+    path: `Pilot with one team for 30 days
+Measure hours saved and error rate weekly
+Expand to the next team only after the pilot threshold is met`
+  },
+  productivity: {
+    rider: `GitHub Copilot reduced developer task completion time by 55% in controlled trials (GitHub, 2023)
+Our current backlog stands at X weeks — equivalent to Y of delayed business value
+Three teams in comparable organizations report 2× throughput within 60 days of rollout`,
+    elephant: `Faster delivery means your ideas ship — not get queued
+This is about amplifying what you already do well, not replacing your judgment
+Your team deserves tools that match the quality of work they produce`,
+    path: `Week 1: tool access provisioned for volunteer cohort
+Week 2: 2-hour guided practice session
+Week 4: team retrospective on output quality and blockers`
+  },
+  cx: {
+    rider: `AI-assisted support resolves 70% of tier-1 tickets without escalation (Klarna case study, 2024)
+Our current first-response time is X hours — industry benchmark is Y hours
+CSAT correlates with resolution speed at r=0.74 across comparable customer bases`,
+    elephant: `Customers who wait less trust us more
+This isn’t automation for its own sake — it’s time back to your customer
+The agents who handle escalations will focus on the cases that actually need human judgment`,
+    path: `Start with FAQ and tier-1 query automation
+Review flagged and escalated cases weekly with the support lead
+Expand scope only after a 60-day quality gate: under 5% false escalation rate`
+  },
+  risk: {
+    rider: `Manual compliance review catches approximately 85% of violations; AI-assisted review raises that to 97% (NIST AI RMF, 2024)
+Regulatory exposure under the EU AI Act (2024) and US state laws increases with undocumented AI use
+One missed violation in this domain costs an estimated $X in remediation and reputational exposure`,
+    elephant: `This is about protecting the organization and the people in it — not surveillance
+Responsible AI signals trust to employees, customers, and regulators simultaneously
+Getting ahead of this now is leadership — waiting makes it reactive and costly`,
+    path: `Shadow mode first: AI flags potential issues, humans make all decisions
+Run for 90 days and audit the false-positive rate
+Promote to co-pilot mode only after the audit confirms the accuracy threshold`
+  },
+  talent: {
+    rider: `Organizations that invest in AI literacy outperform peers by 3.4× on innovation metrics (BCG, 2024)
+Our workforce has an estimated X roles with high AI-augmentation potential per internal job analysis
+Peer organizations report 40% reduction in change resistance after structured literacy programs`,
+    elephant: `This is about making your people more valuable — not replacing them with a tool
+The employees who learn to work with AI become the organization’s competitive advantage
+Investing in your team’s skills is the clearest signal that this change is for them, not to them`,
+    path: `Start with a 2-hour AI literacy session for all affected teams
+Identify 3 early adopters per team who will become internal champions
+Run a structured champion program for 60 days before broader rollout`
+  },
+  data: {
+    rider: `Model performance is bounded by data quality — organizations with mature data foundations see 2× higher AI ROI (McKinsey, 2025)
+Our current data readiness score is X (per the AI Readiness Scorecard)
+Three high-value use cases are blocked today by data availability, not by AI capability`,
+    elephant: `We have years of organizational knowledge locked in systems that can’t talk to each other — this unlocks it
+Better data doesn’t just power AI; it improves every decision we make as an organization
+This investment pays dividends whether or not AI is the end use case`,
+    path: `Audit one high-value data source in the first 30 days
+Clean, label, and connect it to one downstream system
+Prove value with one concrete use case before expanding the data program`
+  },
+  competitive: {
+    rider: `67% of Fortune 500 CEOs cite AI as a top-3 strategic priority (PwC CEO Survey, 2025)
+Three direct competitors have announced AI programs in the past 12 months
+Early movers in our sector are reporting X% improvement in key metrics after 18 months`,
+    elephant: `This is not about chasing trends — it’s about not ceding ground we’ve spent years building
+Our customers will experience AI-powered alternatives; the question is whether those alternatives are ours or a competitor’s
+Moving now is a decision to compete on terms we choose`,
+    path: `Define 2 competitive scenarios where AI changes the playing field for us within 18 months
+Assign an owner to monitor and respond to each scenario
+Review and update the scenarios quarterly at the leadership offsite`
+  },
+  governance: {
+    rider: `The EU AI Act (2024) creates direct liability for high-risk AI systems without audit trails
+Emerging US state laws (Illinois, Colorado, New York) are adding employment AI requirements in 2025–2026
+We currently have an estimated X AI systems in production without a formal governance record`,
+    elephant: `Responsible AI is a trust signal — to employees, customers, and regulators
+Getting ahead of governance is leadership; being forced into it by a regulator is a crisis
+This is about ensuring the organization can stand behind every AI decision we make`,
+    path: `Inventory all AI systems in use across the organization within 30 days
+Apply a risk tier (high / medium / low) to each system using the EU AI Act classification
+Assign a named accountability owner for each high-risk system before quarter end`
+  }
+};
+
+function prefillFromArchetype(key) {
+  const a = ARCHETYPES[key];
+  if (!a) return;
+  document.getElementById('riderText').value = a.rider;
+  document.getElementById('elephantText').value = a.elephant;
+  document.getElementById('pathText').value = a.path;
+}
+
+function toggleLever(id) {
+  const body = document.getElementById(id + 'Body');
+  const chevron = document.getElementById(id + 'Chevron');
+  const header = body.previousElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  header.setAttribute('aria-expanded', String(!isOpen));
+}
+
+function handleLeverKey(e, id) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLever(id); }
+}
+
+function escHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function generatePlan() {
+  const initiative = document.getElementById('initiativeName').value.trim() || 'Untitled Initiative';
+  const audience   = document.getElementById('targetAudience').value.trim() || 'All Stakeholders';
+  const rider      = document.getElementById('riderText').value.trim();
+  const elephant   = document.getElementById('elephantText').value.trim();
+  const path       = document.getElementById('pathText').value.trim();
+  const date       = new Date().toISOString().slice(0, 10);
+
+  document.getElementById('planContent').innerHTML = `
+    <div class="plan-header">
+      <div class="plan-title">${escHtml(initiative)}</div>
+      <div class="plan-meta">Audience: ${escHtml(audience)} &nbsp;&middot;&nbsp; ${date}</div>
+    </div>
+    <div class="lever-block">
+      <div class="lever-block-label">
+        <span class="dot rider-dot"></span>
+        <span style="color:#3949ab;">THE RIDER</span>&nbsp;&mdash; Appeal to Rational Thinking
+      </div>
+      <div class="lever-block-content">${escHtml(rider)}</div>
+    </div>
+    <div class="lever-block">
+      <div class="lever-block-label">
+        <span class="dot elephant-dot"></span>
+        <span style="color:#c2185b;">THE ELEPHANT</span>&nbsp;&mdash; Engage Emotion
+      </div>
+      <div class="lever-block-content">${escHtml(elephant)}</div>
+    </div>
+    <div class="lever-block">
+      <div class="lever-block-label">
+        <span class="dot path-dot"></span>
+        <span style="color:#2e7d32;">THE PATH</span>&nbsp;&mdash; Make It Easy
+      </div>
+      <div class="lever-block-content">${escHtml(path)}</div>
+    </div>
+  `;
+
+  const levers = [
+    { id: 'rider',    label: 'Rider',    color: '#3949ab', text: rider    },
+    { id: 'elephant', label: 'Elephant', color: '#c2185b', text: elephant },
+    { id: 'path',     label: 'Path',     color: '#2e7d32', text: path     }
+  ];
+
+  document.getElementById('tpContent').innerHTML = levers.map(lv => {
+    const bullets = lv.text.split('\n').map(s => s.trim()).filter(Boolean).slice(0, 5);
+    const items   = bullets.map(b => `<li>${escHtml(b)}</li>`).join('');
+    return `
+      <div class="tp-block" id="tp-${lv.id}">
+        <div class="tp-label" style="color:${lv.color};">${lv.label}</div>
+        <ul class="tp-list">${items || '<li><em>No content entered.</em></li>'}</ul>
+        <button class="btn-copy" onclick="copyTP('${lv.id}')" aria-label="Copy ${lv.label} talking points">Copy</button>
+      </div>`;
+  }).join('');
+
+  document.getElementById('tpCard').style.display = '';
+}
+
+function copyTP(id) {
+  const block = document.getElementById('tp-' + id);
+  const items = Array.from(block.querySelectorAll('li')).map(li => '• ' + li.textContent).join('\n');
+  navigator.clipboard.writeText(items).then(() => {
+    const btn = block.querySelector('.btn-copy');
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+  });
+}
+
+// Init
+document.getElementById('archetypeSelect').addEventListener('change', function() {
+  prefillFromArchetype(this.value);
+});
+prefillFromArchetype('cost');
+</script>
+</body>
+</html>
