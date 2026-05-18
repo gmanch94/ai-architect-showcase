@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Communication Strategy Framework</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f6fa;color:#1a1f2e;min-height:100vh;}
+
+  /* ── Header ── */
+  header{background:linear-gradient(135deg,#1a237e,#3949ab);color:#fff;padding:36px 48px 28px;}
+  header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px;}
+  header p{font-size:0.9rem;opacity:0.85;max-width:680px;line-height:1.6;}
+  .header-meta{display:flex;gap:32px;margin-top:18px;flex-wrap:wrap;align-items:center;}
+  .header-meta label{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.65;display:block;margin-bottom:4px;}
+  .header-meta input{background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.4);color:#fff;font-size:0.9rem;width:220px;padding:2px 0;outline:none;}
+  .header-meta input::placeholder{color:rgba(255,255,255,0.4);}
+  .btn-print{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:8px 20px;border-radius:8px;font-size:0.85rem;cursor:pointer;font-weight:600;}
+  .btn-print:hover{background:rgba(255,255,255,0.25);}
+  .btn-print:focus{outline:2px solid rgba(255,255,255,0.6);outline-offset:2px;}
+
+  /* ── Two-column grid ── */
+  .main{display:grid;grid-template-columns:1fr 420px;gap:28px;max-width:1240px;margin:0 auto;padding:36px 24px 60px;}
+
+  /* ── Left column ── */
+  .section-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px #0000000d;margin-bottom:20px;overflow:hidden;}
+
+  .archetype-block{padding:20px 24px;}
+  .archetype-block label{font-size:0.78rem;font-weight:700;color:#1a237e;letter-spacing:0.06em;text-transform:uppercase;display:block;margin-bottom:8px;}
+  .archetype-select{width:100%;padding:10px 14px;border:1px solid #c5cae9;border-radius:8px;font-size:0.9rem;color:#1a1f2e;background:#fff;cursor:pointer;outline:none;}
+  .archetype-select:focus{border-color:#3949ab;box-shadow:0 0 0 3px rgba(57,73,171,0.12);}
+
+  .lever-header{padding:16px 24px;display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none;}
+  .lever-header:focus{outline:2px solid #3949ab;outline-offset:-2px;}
+  .lever-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;font-weight:800;}
+  .lever-title-block{flex:1;}
+  .lever-title{font-size:0.95rem;font-weight:700;color:#1a237e;margin-bottom:2px;}
+  .lever-sub{font-size:0.75rem;color:#9fa8da;}
+  .lever-chevron{font-size:0.8rem;color:#9fa8da;transition:transform 0.2s;}
+  .lever-chevron.open{transform:rotate(180deg);}
+
+  .lever-body{padding:0 24px 20px;display:none;}
+  .lever-body.open{display:block;}
+  .lever-guide{font-size:0.78rem;color:#5c6bc0;margin-bottom:8px;line-height:1.5;}
+  .lever-textarea{width:100%;min-height:110px;padding:10px 12px;border:1px solid #c5cae9;border-radius:8px;font-size:0.85rem;color:#1a1f2e;line-height:1.6;resize:vertical;outline:none;font-family:inherit;}
+  .lever-textarea:focus{border-color:#3949ab;box-shadow:0 0 0 3px rgba(57,73,171,0.12);}
+  .lever-hint{font-size:0.72rem;color:#9fa8da;margin-top:5px;}
+
+  .rider-icon{background:#e8eaf6;color:#3949ab;}
+  .elephant-icon{background:#fce4ec;color:#c2185b;}
+  .path-icon{background:#e8f5e9;color:#2e7d32;}
+
+  .btn-generate{width:100%;padding:14px;background:#1a237e;color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:4px;letter-spacing:0.02em;}
+  .btn-generate:hover{background:#283593;}
+  .btn-generate:focus{outline:2px solid #3949ab;outline-offset:2px;}
+
+  /* ── Right column — output panel ── */
+  .output-panel{position:sticky;top:28px;}
+
+  .output-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px #0000000d;padding:28px;margin-bottom:20px;}
+  .output-card h3{font-size:0.78rem;font-weight:700;color:#1a237e;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:18px;}
+
+  .plan-header{margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #e8edf8;}
+  .plan-title{font-size:1.2rem;font-weight:800;color:#1a237e;margin-bottom:4px;min-height:1.5em;}
+  .plan-meta{font-size:0.8rem;color:#5c6bc0;}
+
+  .lever-block{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid #f0f2fa;}
+  .lever-block:last-child{border:none;margin-bottom:0;padding-bottom:0;}
+  .lever-block-label{font-size:0.72rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .lever-block-label .dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0;}
+  .rider-dot{background:#3949ab;}
+  .elephant-dot{background:#c2185b;}
+  .path-dot{background:#2e7d32;}
+  .lever-block-content{font-size:0.85rem;color:#374060;line-height:1.7;white-space:pre-wrap;}
+
+  .tp-block{background:#f8f9ff;border-radius:10px;padding:14px 16px;margin-bottom:12px;}
+  .tp-block:last-child{margin-bottom:0;}
+  .tp-label{font-size:0.72rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
+  .tp-list{padding-left:18px;margin:0;}
+  .tp-list li{font-size:0.82rem;color:#374060;line-height:1.6;margin-bottom:3px;}
+  .btn-copy{margin-top:8px;background:transparent;border:1px solid #c5cae9;color:#3949ab;padding:4px 12px;border-radius:6px;font-size:0.75rem;cursor:pointer;font-weight:600;}
+  .btn-copy:hover{background:#e8eaf6;}
+  .btn-copy:focus{outline:2px solid #3949ab;outline-offset:2px;}
+
+  .output-empty{text-align:center;padding:40px 20px;color:#9fa8da;}
+  .output-empty .empty-icon{font-size:2.5rem;margin-bottom:12px;}
+  .output-empty p{font-size:0.85rem;line-height:1.6;}
+
+  /* ── Footer ── */
+  .footer{max-width:1240px;margin:0 auto;padding:20px 24px 40px;font-size:0.78rem;color:#5c6bc0;border-top:1px solid #e8edf8;}
+  .footer a{color:#3949ab;text-decoration:none;}
+  .footer a:hover{text-decoration:underline;}
+
+  /* ── Print ── */
+  @media print{
+    header{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .main{grid-template-columns:1fr;display:block;}
+    #leftCol{display:none;}
+    #rightCol{display:block;width:100%;}
+    .output-panel{position:static;}
+    .output-card{box-shadow:none;border:1px solid #e8edf8;page-break-inside:avoid;}
+    .btn-copy,.btn-print{display:none;}
+    .footer{border-top:1px solid #ccc;}
+    body{background:#fff;}
+  }
+
+  /* ── Responsive ── */
+  @media(max-width:900px){
+    .main{grid-template-columns:1fr;padding:20px 12px 40px;}
+    header{padding:24px 20px;}
+    .output-panel{position:static;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AI Communication Strategy Framework</h1>
+  <p>Structure your AI initiative communications using the Rider / Elephant / Path model. Select an archetype, edit the levers to fit your organization, then generate a formatted plan and talking points.</p>
+  <div class="header-meta">
+    <div><label for="initiativeName">Initiative Name</label><input type="text" id="initiativeName" placeholder="e.g. AI-Assisted Contract Review" aria-label="Initiative name"></div>
+    <div><label for="targetAudience">Target Audience</label><input type="text" id="targetAudience" placeholder="e.g. Legal Department" aria-label="Target audience"></div>
+    <button class="btn-print" onclick="window.print()" aria-label="Print or save as PDF">Print / PDF</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Left column — form -->
+  <div id="leftCol">
+
+    <div class="section-card">
+      <div class="archetype-block">
+        <label for="archetypeSelect">Initiative Archetype</label>
+        <select id="archetypeSelect" class="archetype-select" aria-label="Select initiative archetype">
+          <option value="claudecode">AI Coding Assistant (Claude Code)</option>
+          <option value="cost">Cost Reduction</option>
+          <option value="productivity">Productivity &amp; Speed</option>
+          <option value="cx">Customer Experience</option>
+          <option value="risk">Risk &amp; Compliance</option>
+          <option value="talent">Talent &amp; Upskilling</option>
+          <option value="data">Data Strategy</option>
+          <option value="competitive">Competitive Positioning</option>
+          <option value="governance">Governance &amp; Ethics</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Rider -->
+    <div class="section-card">
+      <div class="lever-header" tabindex="0" role="button" aria-expanded="true" aria-controls="riderBody" onclick="toggleLever('rider')" onkeydown="handleLeverKey(event,'rider')">
+        <div class="lever-icon rider-icon">R</div>
+        <div class="lever-title-block">
+          <div class="lever-title">The Rider</div>
+          <div class="lever-sub">Appeals to rational thinking — facts, plans, evidence</div>
+        </div>
+        <span class="lever-chevron open" id="riderChevron" aria-hidden="true">&#9660;</span>
+      </div>
+      <div class="lever-body open" id="riderBody">
+        <div class="lever-guide">What data, benchmarks, or logical argument makes the case?</div>
+        <textarea id="riderText" class="lever-textarea" aria-label="Rider lever content — one point per line" placeholder="One point per line&#10;e.g. AI reduces processing time by 40&#8211;60% in comparable organizations (McKinsey 2025)"></textarea>
+        <div class="lever-hint">One point per line — each line becomes a talking point bullet.</div>
+      </div>
+    </div>
+
+    <!-- Elephant -->
+    <div class="section-card">
+      <div class="lever-header" tabindex="0" role="button" aria-expanded="true" aria-controls="elephantBody" onclick="toggleLever('elephant')" onkeydown="handleLeverKey(event,'elephant')">
+        <div class="lever-icon elephant-icon">E</div>
+        <div class="lever-title-block">
+          <div class="lever-title">The Elephant</div>
+          <div class="lever-sub">Engages emotion — identity, urgency, shared purpose</div>
+        </div>
+        <span class="lever-chevron open" id="elephantChevron" aria-hidden="true">&#9660;</span>
+      </div>
+      <div class="lever-body open" id="elephantBody">
+        <div class="lever-guide">What emotional truth resonates? Avoid fear or sentimentality.</div>
+        <textarea id="elephantText" class="lever-textarea" aria-label="Elephant lever content — one point per line" placeholder="One point per line&#10;e.g. We are not cutting jobs — we are reclaiming time our people spend on work that doesn't use their expertise."></textarea>
+        <div class="lever-hint">One point per line — each line becomes a talking point bullet.</div>
+      </div>
+    </div>
+
+    <!-- Path -->
+    <div class="section-card">
+      <div class="lever-header" tabindex="0" role="button" aria-expanded="true" aria-controls="pathBody" onclick="toggleLever('path')" onkeydown="handleLeverKey(event,'path')">
+        <div class="lever-icon path-icon">P</div>
+        <div class="lever-title-block">
+          <div class="lever-title">The Path</div>
+          <div class="lever-sub">Makes it easy — clear steps, intermediate wins, low friction</div>
+        </div>
+        <span class="lever-chevron open" id="pathChevron" aria-hidden="true">&#9660;</span>
+      </div>
+      <div class="lever-body open" id="pathBody">
+        <div class="lever-guide">What is the concrete next step? What happens in 30 / 60 / 90 days?</div>
+        <textarea id="pathText" class="lever-textarea" aria-label="Path lever content — one point per line" placeholder="One point per line&#10;e.g. Pilot with one team. Measure hours saved in 30 days. Expand if threshold met."></textarea>
+        <div class="lever-hint">One point per line — each line becomes a talking point bullet.</div>
+      </div>
+    </div>
+
+    <button class="btn-generate" onclick="generatePlan()" aria-label="Generate communication plan">Generate Plan</button>
+  </div>
+
+  <!-- Right column — output -->
+  <div id="rightCol">
+    <div class="output-panel">
+
+      <div class="output-card" id="onePager">
+        <h3>Communication Plan</h3>
+        <div id="planContent">
+          <div class="output-empty">
+            <div class="empty-icon">&#128196;</div>
+            <p>Fill in the levers and click<br><strong>Generate Plan</strong> to see your formatted plan.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="output-card" id="tpCard" style="display:none;">
+        <h3>Talking Points</h3>
+        <div id="tpContent"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <span>&#169; <a href="https://github.com/gmanch94/ai-architect-showcase">gmanch94</a> &nbsp;&#183;&nbsp; <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY-4.0</a> &nbsp;&#183;&nbsp; AI Architect Showcase &nbsp;&#183;&nbsp; Based on Heath &amp; Heath, <em>Switch</em> (2010)</span>
+</div>
+
+<script>
+const ARCHETYPES = {
+  claudecode: {
+    rider: `Engineers spend 35–40% of their time on code navigation, documentation lookup, and boilerplate — not building (Stack Overflow Developer Survey, 2024)
+Claude Code operates in the terminal with full codebase context: it reads files, runs tests, edits across multiple files, and executes shell commands autonomously
+Teams using agentic coding assistants report completing in 1–2 days tasks that previously took 3–5 (Anthropic customer data, 2025)
+Unlike autocomplete tools, Claude Code handles multi-step tasks: write the failing test, implement the fix, run CI, summarize what changed`,
+    elephant: `Your engineers didn't join to grep through legacy code and write boilerplate — they joined to build things that matter
+Claude Code removes the friction that breaks focus and burns people out, so they can stay in the creative work longer
+This isn't about replacing engineers — it's about giving them back the hours that disappear into tasks a machine can handle
+The engineers who learn to work with AI coding tools don't get replaced; they become the architects of how your organization uses AI`,
+    path: `Day 1: install Claude Code CLI and try it on one open ticket — no setup beyond the terminal
+Week 1: use it on one feature branch; let it navigate the codebase, write tests, and suggest refactors
+Week 2: share wins in engineering standup — identify 2–3 task types where it saves the most time
+Month 1: write a lightweight team playbook defining which tasks to delegate and how to review AI-generated code
+Month 2: expand to the full team using the playbook written by your own early adopters`
+  },
+  cost: {
+    rider: `Crown Equipment’s InfoLink® fleet management platform uses AI-assisted telemetry to reduce forklift downtime by flagging maintenance needs before failure — cutting unplanned repair costs by an estimated 20–30% per fleet (Crown Equipment, 2024)
+AI reduces manual processing time by 40–60% in comparable manufacturing and distribution operations (McKinsey, State of AI 2025)
+Our team currently spends an estimated X hours per week on tasks AI can automate — predictive maintenance, scheduling, and inspection logging are the highest-ROI starting points`,
+    elephant: `We are not cutting technician jobs — we are giving them the information they need before a line goes down
+Every unplanned outage costs more than the maintenance call that prevented it; AI makes prevention the default
+This is about running a smarter operation, not a leaner headcount`,
+    path: `Pilot predictive maintenance AI on one equipment class for 30 days using existing sensor data
+Measure unplanned downtime, mean time between failures, and technician callout hours weekly
+Expand to the next equipment class only after the pilot demonstrates a measurable reduction in reactive repairs`
+  },
+  productivity: {
+    rider: `Databricks Code Genie accelerates SQL and PySpark development — data teams report 40–50% reduction in query-writing time (Databricks, 2024)
+Our current backlog stands at X weeks — equivalent to Y of delayed business value
+Code Genie understands your Unity Catalog schema and past notebooks, generating context-aware code rather than generic snippets`,
+    elephant: `Faster delivery means your ideas ship — not get queued
+This is about amplifying what you already do well, not replacing your judgment
+Your team deserves tools that understand your data environment, not just the syntax`,
+    path: `Week 1: enable Code Genie for volunteer cohort in existing Databricks workspace — no new tooling required
+Week 2: 2-hour guided practice session focused on SQL generation and notebook documentation
+Week 4: team retrospective on output quality, accuracy, and where human review is still essential`
+  },
+  cx: {
+    rider: `Kroger’s 84.51° platform uses AI to deliver personalized promotions to 60M+ households — driving 2–3× higher coupon redemption vs. mass offers (84.51°, 2024)
+AI-powered substitution recommendations reduced out-of-stock abandonment by 18% in comparable grocery deployments
+CSAT correlates with personalization accuracy at r=0.71 across retail customer bases`,
+    elephant: `Customers don’t want more offers — they want the right offer at the right moment
+This is about knowing your customer well enough that every interaction feels considered, not automated
+The associates who handle complex needs will spend less time on routine questions and more time building loyalty`,
+    path: `Start with personalized offer targeting for your top loyalty segment
+Review recommendation accuracy and opt-out rates weekly for the first 60 days
+Expand to substitution recommendations and smart replenishment prompts after quality gate`
+  },
+  risk: {
+    rider: `Crown Equipment's AI-assisted operator monitoring (via InfoLink®) detects unsafe forklift behaviors — hard braking, speed violations, impact events — enabling intervention before OSHA recordable incidents occur
+Manual safety audits catch an estimated 70–80% of at-risk behaviors; continuous AI monitoring raises detection coverage to near-real-time across all shifts
+One OSHA recordable incident in material handling costs an average of $38,000 in direct costs — plus reputational and insurance exposure (NSC Injury Facts, 2024)`,
+    elephant: `This is about protecting the people on the floor — not surveillance
+Operators who know the system flags unsafe conditions trust that management is paying attention to their safety, not just their productivity
+Getting ahead of incidents is leadership; reacting to them is damage control`,
+    path: `Shadow mode first: AI flags at-risk operator behaviors, supervisors review and coach — no automated consequences
+Run for 90 days, audit false-positive rate, and calibrate thresholds with frontline supervisors
+Promote to real-time alert mode only after operators and supervisors have validated the system's accuracy together`
+  },
+  talent: {
+    rider: `Crown Equipment service technicians who use AI-assisted diagnostics resolve field issues 30% faster than those relying on static manuals alone — reducing truck rolls and customer downtime (Crown Equipment internal data, 2024)
+Organizations that invest in AI literacy outperform peers by 3.4× on innovation metrics (BCG, 2024)
+Our workforce has an estimated X roles — technicians, planners, quality inspectors — with high AI-augmentation potential per internal job analysis`,
+    elephant: `Crown’s technicians carry decades of diagnostic knowledge in their heads — AI doesn’t replace that expertise, it makes it portable and shareable across the whole team
+This is about making your most experienced people more effective and giving newer technicians a faster path to competence
+Investing in your team’s skills is the clearest signal that this change is for them, not to them`,
+    path: `Start with a 2-hour AI literacy session tailored to technician and operations roles — use real equipment scenarios, not generic examples
+Identify 3 early adopters per team who will test AI-assisted diagnostics and document what works
+Run a structured champion program for 60 days; have champions write the training guide for the broader rollout`
+  },
+  data: {
+    rider: `Kroger’s 84.51° subsidiary turns loyalty transaction data from 60M+ households into a $1B+ alternative profit business — monetized through Kroger Precision Marketing (Kroger Annual Report, 2024)
+Model performance is bounded by data quality — organizations with mature data foundations see 2× higher AI ROI (McKinsey, 2025)
+Our current data readiness score is X (per the AI Readiness Scorecard) — three high-value use cases are blocked today by data availability, not AI capability`,
+    elephant: `We have years of customer and operational knowledge locked in systems that don’t talk to each other — this unlocks it
+Kroger didn’t build 84.51° because they wanted to be a data company; they did it because their customers expected them to know them
+Better data improves every decision we make — AI is just the most visible beneficiary`,
+    path: `Audit one high-value data source in the first 30 days — loyalty transactions, supply chain events, or operational logs
+Clean, label, and connect it to one downstream system
+Prove value with one concrete use case before expanding — demand forecasting and personalized offers are proven first movers in retail`
+  },
+  competitive: {
+    rider: `Kroger invested in AI-driven demand forecasting and alternative profit streams (84.51°, Kroger Precision Marketing) while Amazon Fresh and Walmart+ scaled — widening the data moat before competitors could close it (Kroger Annual Report, 2024)
+67% of Fortune 500 CEOs cite AI as a top-3 strategic priority (PwC CEO Survey, 2025)
+Three direct competitors have announced AI programs in the past 12 months — early movers report X% improvement in key metrics after 18 months`,
+    elephant: `Kroger didn’t wait to see if data and AI would matter in grocery — they built the infrastructure a decade early and it is now a competitive moat
+This is not about chasing trends — it’s about not ceding ground we’ve spent years building
+Our customers will experience AI-powered alternatives from competitors; the question is whether we shape that experience or react to it`,
+    path: `Define 2 competitive scenarios where AI shifts the playing field for us within 18 months
+Assign an owner to each scenario — someone who tracks competitor moves and reports quarterly
+Review and stress-test the scenarios at the leadership offsite; update annually or when a competitor makes a major move`
+  },
+  governance: {
+    rider: `The EU AI Act (2024) creates direct liability for high-risk AI systems without audit trails
+Emerging US state laws (Illinois, Colorado, New York) are adding employment AI requirements in 2025–2026
+We currently have an estimated X AI systems in production without a formal governance record`,
+    elephant: `Responsible AI is a trust signal — to employees, customers, and regulators
+Getting ahead of governance is leadership; being forced into it by a regulator is a crisis
+This is about ensuring the organization can stand behind every AI decision we make`,
+    path: `Inventory all AI systems in use across the organization within 30 days
+Apply a risk tier (high / medium / low) to each system using the EU AI Act classification
+Assign a named accountability owner for each high-risk system before quarter end`
+  }
+};
+
+function prefillFromArchetype(key) {
+  const a = ARCHETYPES[key];
+  if (!a) return;
+  document.getElementById('riderText').value = a.rider;
+  document.getElementById('elephantText').value = a.elephant;
+  document.getElementById('pathText').value = a.path;
+}
+
+function toggleLever(id) {
+  const body = document.getElementById(id + 'Body');
+  const chevron = document.getElementById(id + 'Chevron');
+  const header = body.previousElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  header.setAttribute('aria-expanded', String(!isOpen));
+}
+
+function handleLeverKey(e, id) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLever(id); }
+}
+
+function escHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function generatePlan() {
+  const initiative = document.getElementById('initiativeName').value.trim() || 'Untitled Initiative';
+  const audience   = document.getElementById('targetAudience').value.trim() || 'All Stakeholders';
+  const rider      = document.getElementById('riderText').value.trim();
+  const elephant   = document.getElementById('elephantText').value.trim();
+  const path       = document.getElementById('pathText').value.trim();
+  const date       = new Date().toISOString().slice(0, 10);
+
+  document.getElementById('planContent').innerHTML = `
+    <div class="plan-header">
+      <div class="plan-title">${escHtml(initiative)}</div>
+      <div class="plan-meta">Audience: ${escHtml(audience)} &nbsp;&middot;&nbsp; ${date}</div>
+    </div>
+    <div class="lever-block">
+      <div class="lever-block-label">
+        <span class="dot rider-dot"></span>
+        <span style="color:#3949ab;">THE RIDER</span>&nbsp;&mdash; Appeal to Rational Thinking
+      </div>
+      <div class="lever-block-content">${escHtml(rider)}</div>
+    </div>
+    <div class="lever-block">
+      <div class="lever-block-label">
+        <span class="dot elephant-dot"></span>
+        <span style="color:#c2185b;">THE ELEPHANT</span>&nbsp;&mdash; Engage Emotion
+      </div>
+      <div class="lever-block-content">${escHtml(elephant)}</div>
+    </div>
+    <div class="lever-block">
+      <div class="lever-block-label">
+        <span class="dot path-dot"></span>
+        <span style="color:#2e7d32;">THE PATH</span>&nbsp;&mdash; Make It Easy
+      </div>
+      <div class="lever-block-content">${escHtml(path)}</div>
+    </div>
+  `;
+
+  const levers = [
+    { id: 'rider',    label: 'Rider',    color: '#3949ab', text: rider    },
+    { id: 'elephant', label: 'Elephant', color: '#c2185b', text: elephant },
+    { id: 'path',     label: 'Path',     color: '#2e7d32', text: path     }
+  ];
+
+  document.getElementById('tpContent').innerHTML = levers.map(lv => {
+    const bullets = lv.text.split('\n').map(s => s.trim()).filter(Boolean).slice(0, 5);
+    const items   = bullets.map(b => `<li>${escHtml(b)}</li>`).join('');
+    return `
+      <div class="tp-block" id="tp-${lv.id}">
+        <div class="tp-label" style="color:${lv.color};">${lv.label}</div>
+        <ul class="tp-list">${items || '<li><em>No content entered.</em></li>'}</ul>
+        <button class="btn-copy" onclick="copyTP('${lv.id}')" aria-label="Copy ${lv.label} talking points">Copy</button>
+      </div>`;
+  }).join('');
+
+  document.getElementById('tpCard').style.display = '';
+}
+
+function copyTP(id) {
+  const block = document.getElementById('tp-' + id);
+  const items = Array.from(block.querySelectorAll('li')).map(li => '• ' + li.textContent).join('\n');
+  navigator.clipboard.writeText(items).then(() => {
+    const btn = block.querySelector('.btn-copy');
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+  });
+}
+
+// Init
+document.getElementById('archetypeSelect').addEventListener('change', function() {
+  prefillFromArchetype(this.value);
+});
+document.getElementById('archetypeSelect').value = 'claudecode';
+document.getElementById('initiativeName').value = 'Claude Code for Engineering Teams';
+document.getElementById('targetAudience').value = 'Engineering Leadership';
+prefillFromArchetype('claudecode');
+</script>
+</body>
+</html>
