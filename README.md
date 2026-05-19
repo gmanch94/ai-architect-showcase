@@ -21,6 +21,9 @@ These are the public-facing executive companions to the architect-grade operatio
 | A strategy lead building an AI portfolio | [`portfolio-worksheet.html`](artifacts/portfolio-worksheet.html) → [`case-study-library.html`](artifacts/case-study-library.html) |
 | A CHRO / people analytics lead | [`hr-maturity-checklist.html`](artifacts/hr-maturity-checklist.html) → [`readiness-scorecard.html`](artifacts/readiness-scorecard.html) |
 | A change leader communicating an AI initiative | [`communication-strategy.html`](artifacts/communication-strategy.html) → [`executive-briefing.html`](artifacts/executive-briefing.html) |
+| A CFO / finance lead sizing an AI investment | [`roi-calculator.html`](artifacts/roi-calculator.html) → [`portfolio-worksheet.html`](artifacts/portfolio-worksheet.html) |
+| A CTO / engineering lead choosing AI vendors | [`vendor-assessment-matrix.html`](artifacts/vendor-assessment-matrix.html) → [`ai-strategy-framework.md`](artifacts/ai-strategy-framework.md) |
+| A legal / compliance / risk officer | [`ai-governance-checklist.html`](artifacts/ai-governance-checklist.html) → [`hr-maturity-checklist.html`](artifacts/hr-maturity-checklist.html) |
 | Anyone learning the AI vocabulary | [`glossary.html`](artifacts/glossary.html) |
 
 ---
@@ -34,10 +37,13 @@ These are the public-facing executive companions to the architect-grade operatio
 | [`portfolio-worksheet.html`](artifacts/portfolio-worksheet.html) | Decision tool | Add use cases → auto-classify by horizon (H1/H2/H3) → score on Business Value × Data Readiness × Feasibility → ranked portfolio + bubble chart. 14 sample use cases pre-loaded. |
 | [`ai-strategy-framework.md`](artifacts/ai-strategy-framework.md) | Framework | 8-section strategy doc covering portfolio approach, economics inputs, competitive strategy, organizational design, innovation, implementation roadmap, common failure modes, and the GenAI/agentic shift. |
 | [`mindmap.html`](artifacts/mindmap.html) | Visual | Interactive D3 radial mindmap. 4 topic clusters; nodes collapse/expand; hover for pros/cons/details. Use as a teaching aid or onboarding artifact. |
-| [`case-study-library.html`](artifacts/case-study-library.html) | Reference | 14 case study cards (Zillow, Netflix, Klarna, Air Canada, GitHub Copilot, Bloomberg GPT, etc.) with topic filter + full-text search. Each card: situation, lesson, tags. |
-| [`glossary.html`](artifacts/glossary.html) | Reference | 50+ AI terms in plain English, grouped by topic, filterable + searchable. "Use when…" guidance on every term. |
+| [`case-study-library.html`](artifacts/case-study-library.html) | Reference | 20 case study cards (Zillow, Netflix, Klarna, Air Canada, GitHub Copilot, Bloomberg GPT, plus 2025–2026 cases: Cursor support hallucination, Apple Intelligence delay, Deloitte AI-cited report, EU AI Act GPAI enforcement, Salesforce Agentforce, Replit Agent prod-DB wipe) with topic filter + full-text search. Each card: situation, lesson, tags. |
+| [`glossary.html`](artifacts/glossary.html) | Reference | 65+ AI terms in plain English (incl. agentic AI, MCP, EU AI Act tiers, evals, guardrails, constitutional AI, prompt injection, test-time compute), grouped by topic, filterable + searchable. "Use when…" guidance on every term. |
 | [`hr-maturity-checklist.html`](artifacts/hr-maturity-checklist.html) | Self-assessment | HR-specific maturity model. 5 dimensions (data foundation, algorithmic literacy, bias controls, explainability/compliance, change management) × 5 questions each. Live radar + gap analysis. EEOC 4/5ths, GDPR Art. 22, NYC LL 144, EU AI Act anchored. |
 | [`communication-strategy.html`](artifacts/communication-strategy.html) | Planning tool | Select an AI initiative archetype (8 options) → edit Rider / Elephant / Path levers → get a formatted communication plan + talking points. Print to PDF or copy talking points. Based on Heath & Heath, *Switch* (2010). |
+| [`roi-calculator.html`](artifacts/roi-calculator.html) | Decision tool | AI investment ROI / TCO calculator. Inputs: headcount, loaded cost, productivity lift, deployment + ongoing cost, ramp-up months, discount rate. Outputs: 3-year NPV, payback months, cost per user, Chart.js sensitivity bars. 6 preset scenarios (Copilot, support automation, doc summarization, code gen, sales enablement, fraud detection). |
+| [`ai-governance-checklist.html`](artifacts/ai-governance-checklist.html) | Self-assessment | AI governance maturity model anchored on EU AI Act + NIST AI RMF. 5 dimensions (inventory, governance structure, risk assessment, risk controls, compliance/transparency) × 5 questions. Live radar + gap analysis + EU AI Act risk-tier classifier (unacceptable / high / limited / minimal). |
+| [`vendor-assessment-matrix.html`](artifacts/vendor-assessment-matrix.html) | Decision tool | AI vendor and build-vs-buy scoring matrix. Add up to 5 vendors → score on 8 criteria (capability fit, data control, deployment model, TCO, lock-in, security, compliance, roadmap) with editable weights → Chart.js horizontal bar + verdict. 3 presets (knowledge-worker copilot, support agent, code generation) with 2025–2026 vendor candidates. |
 
 ---
 
@@ -56,6 +62,9 @@ Direct artifact links:
 - [Glossary](https://gmanch94.github.io/ai-architect-showcase/artifacts/glossary.html)
 - [Strategy framework](https://github.com/gmanch94/ai-architect-showcase/blob/main/artifacts/ai-strategy-framework.md) (Markdown — renders on GitHub)
 - [Communication strategy framework](https://gmanch94.github.io/ai-architect-showcase/artifacts/communication-strategy.html)
+- [ROI / TCO calculator](https://gmanch94.github.io/ai-architect-showcase/artifacts/roi-calculator.html)
+- [AI governance checklist](https://gmanch94.github.io/ai-architect-showcase/artifacts/ai-governance-checklist.html)
+- [Vendor assessment matrix](https://gmanch94.github.io/ai-architect-showcase/artifacts/vendor-assessment-matrix.html)
 
 Or **fork** the repo, customize for your org, host wherever you want.
 

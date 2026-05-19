@@ -51,6 +51,9 @@ ai-architect-showcase/
 │   ├── case-study-library.html
 │   ├── glossary.html
 │   ├── communication-strategy.html
+│   ├── roi-calculator.html
+│   ├── ai-governance-checklist.html
+│   ├── vendor-assessment-matrix.html
 │   └── ai-strategy-framework.md
 └── .claude/
     └── settings.json          ← Pre-allowed safe operations

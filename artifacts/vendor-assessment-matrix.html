@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Vendor / Build-vs-Buy Assessment Matrix</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --t1:#2196F3; --t1d:#1565C0;
+    --t2:#4CAF50; --t2d:#2E7D32;
+    --t3:#FF9800; --t3d:#E65100;
+    --t5:#9C27B0; --t5d:#6A1B9A;
+    --bg:#f7f9fc; --card:#fff; --border:#e1e6ee; --text:#1a2332; --mute:#5b6b80;
+    --good:#2E7D32; --mid:#E65100; --bad:#c62828;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: var(--bg); color: var(--text); line-height: 1.5; }
+  header { background: linear-gradient(135deg, #1565C0, #6A1B9A); color: #fff; padding: 28px 32px; }
+  header h1 { margin: 0 0 6px; font-size: 26px; }
+  header p { margin: 0; opacity: 0.9; font-size: 14px; }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 24px 32px 80px; }
+  .doctrine { background: #fff7e6; border-left: 4px solid #FF9800; padding: 14px 18px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; }
+  .doctrine b { color: #E65100; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+  .card h2 { margin: 0 0 14px; font-size: 16px; color: #1a2332; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  th { background: #f0f4fa; font-weight: 600; color: #5b6b80; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }
+  th.crit { text-align: center; cursor: help; }
+  td.scoreCell { text-align: center; padding: 4px; }
+  td.scoreCell select { width: 56px; padding: 4px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; font-family: inherit; background: #fff; }
+  .totalCell { font-weight: 700; font-size: 15px; text-align: center; color: #1a2332; }
+  .build-row td { background: #f4f7fb; }
+  .build-row td:first-child { border-left: 3px solid var(--t5); }
+  input[type="text"] { width: 100%; padding: 7px 9px; border: 1px solid var(--border); border-radius: 5px; font-size: 13px; font-family: inherit; }
+  input.weight { width: 56px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; text-align: center; }
+  button { background: #1565C0; color: #fff; border: 0; padding: 9px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
+  button:hover { background: #0d47a1; }
+  button.del { background: #fff; color: #d32f2f; border: 1px solid #d32f2f; padding: 3px 8px; font-size: 11px; }
+  button.del:hover { background: #d32f2f; color: #fff; }
+  button.alt { background: #5b6b80; }
+  button.alt:hover { background: #3d4858; }
+  button.print { background: #5b6b80; }
+  .toolbar { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+  .toolbar select { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; background: #fff; }
+  .chart-wrap { position: relative; height: 360px; }
+  .empty { text-align: center; color: var(--mute); padding: 24px; font-style: italic; }
+  .weight-row td { background: #fafbfd; font-size: 12px; }
+  .weight-warn { color: var(--bad); font-weight: 600; }
+  .weight-ok { color: var(--good); font-weight: 600; }
+  .decision { background: linear-gradient(135deg, #e8f5e9, #f1f8e9); border-left: 4px solid #2E7D32; padding: 16px 20px; border-radius: 8px; }
+  .decision h3 { margin: 0 0 6px; color: #1B5E20; font-size: 16px; }
+  .decision .winner { font-size: 22px; font-weight: 700; color: #1B5E20; margin: 4px 0; }
+  .decision .why { font-size: 14px; color: #2E3D2E; }
+  .legend { display: flex; gap: 16px; font-size: 12px; color: var(--mute); flex-wrap: wrap; margin-bottom: 10px; }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
+  .formula { font-size: 11px; color: var(--mute); margin-top: 8px; }
+  .tip { position: relative; display: inline-block; border-bottom: 1px dotted var(--mute); cursor: help; }
+  .tip .tipbody { visibility: hidden; opacity: 0; transition: opacity 0.15s; position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1a2332; color: #fff; padding: 8px 10px; border-radius: 6px; font-size: 11px; font-weight: 400; text-transform: none; letter-spacing: 0; width: 240px; z-index: 10; line-height: 1.4; text-align: left; }
+  .tip:hover .tipbody { visibility: visible; opacity: 1; }
+  footer.cc { text-align: center; color: var(--mute); font-size: 12px; padding: 24px 0; border-top: 1px solid var(--border); margin-top: 24px; }
+  .disclaimer { font-size: 12px; color: var(--mute); background: #fffaf0; border-left: 3px solid #FF9800; padding: 10px 14px; border-radius: 4px; margin-top: 14px; }
+  @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+  @media print {
+    header { background: #1565C0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    button, .toolbar { display: none; }
+    .grid { grid-template-columns: 1fr; }
+    .tip .tipbody { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>AI Vendor / Build-vs-Buy Assessment Matrix</h1>
+  <p>Score up to 5 vendors plus your build option across 8 weighted criteria. Live ranking + comparative chart + build-vs-buy verdict.</p>
+</header>
+
+<div class="wrap">
+
+<div class="doctrine">
+  <b>Doctrine.</b> Most AI vendor decisions are made on demo polish and reference logos. Both are noise. The signal is in 8 dimensions that determine whether you can <i>operate</i> the system 24 months from now: capability fit, data control, deployment options, 3-year TCO, lock-in, security, compliance, and roadmap. Score them; weight them; defend the number.
+</div>
+
+<div class="card">
+  <h2>1. Pick a preset or start blank</h2>
+  <div class="toolbar">
+    <select id="preset">
+      <option value="">-- choose a preset use case --</option>
+      <option value="copilot">GenAI Copilot for knowledge workers</option>
+      <option value="support">Customer support agent</option>
+      <option value="codegen">Code generation</option>
+    </select>
+    <button onclick="loadPreset()">Load preset</button>
+    <button class="alt" onclick="resetBlank()">Reset to blank</button>
+    <button class="alt" onclick="resetWeights()">Reset weights to equal</button>
+    <button class="print" onclick="window.print()">Print / PDF</button>
+  </div>
+  <p style="font-size: 12px; color: var(--mute); margin: 0;">Presets fill realistic 2025-2026 candidates. Edit names, scores, and weights freely.</p>
+</div>
+
+<div class="card">
+  <h2>2. Score vendors (1 = weak, 5 = strong)</h2>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--good)"></span>Total ≥ 4.0 — strong fit</span>
+    <span><span class="dot" style="background:var(--mid)"></span>3.0 - 4.0 — viable, watch gaps</span>
+    <span><span class="dot" style="background:var(--bad)"></span>&lt; 3.0 — disqualify or remediate</span>
+  </div>
+  <div style="overflow-x: auto;">
+  <table id="matrix">
+    <thead>
+      <tr>
+        <th style="min-width:160px;">Vendor</th>
+        <th class="crit"><span class="tip">Capability fit<span class="tipbody"><b>1</b>: misses core use case · <b>3</b>: covers main path, gaps on edges · <b>5</b>: solves the actual use case with margin</span></span></th>
+        <th class="crit"><span class="tip">Data control<span class="tipbody"><b>1</b>: data trains shared model, no opt-out · <b>3</b>: opt-out available, data still leaves tenant · <b>5</b>: data stays in your tenant, contractual no-train</span></span></th>
+        <th class="crit"><span class="tip">Deployment<span class="tipbody"><b>1</b>: multi-tenant SaaS only · <b>3</b>: VPC / dedicated tenant option · <b>5</b>: SaaS + VPC + on-prem / hybrid available</span></span></th>
+        <th class="crit"><span class="tip">3-yr TCO<span class="tipbody"><b>1</b>: licenses + integration + ops far above budget · <b>3</b>: at budget, integration costs uncertain · <b>5</b>: predictable, well under budget over 3 years</span></span></th>
+        <th class="crit"><span class="tip">Lock-in<span class="tipbody"><b>1</b>: proprietary APIs, no data export · <b>3</b>: export available, migration painful · <b>5</b>: open standards, portable data, low switching cost</span></span></th>
+        <th class="crit"><span class="tip">Security<span class="tipbody"><b>1</b>: no certifications · <b>3</b>: SOC2 Type II · <b>5</b>: SOC2 + ISO 27001 + sector certs (HIPAA / FedRAMP) as needed</span></span></th>
+        <th class="crit"><span class="tip">Compliance<span class="tipbody"><b>1</b>: no AI-Act / GDPR posture · <b>3</b>: GDPR + AI-Act conformity in progress · <b>5</b>: full EU AI Act conformity, sector-specific (HIPAA / PCI) ready</span></span></th>
+        <th class="crit"><span class="tip">Roadmap<span class="tipbody"><b>1</b>: opaque roadmap, vendor funding risk · <b>3</b>: published roadmap, partial alignment · <b>5</b>: roadmap matches your needs, stable vendor</span></span></th>
+        <th class="totalCell">Total</th>
+        <th></th>
+      </tr>
+      <tr class="weight-row">
+        <td><b>Weight (%)</b> <span id="weightStatus"></span></td>
+        <td class="scoreCell"><input class="weight" type="number" min="0" max="100" data-w="0" value="12.5"></td>
+        <td class="scoreCell"><input class="weight" type="number" min="0" max="100" data-w="1" value="12.5"></td>
+        <td class="scoreCell"><input class="weight" type="number" min="0" max="100" data-w="2" value="12.5"></td>
+        <td class="scoreCell"><input class="weight" type="number" min="0" max="100" data-w="3" value="12.5"></td>
+        <td class="scoreCell"><input class="weight" type="number" min="0" max="100" data-w="4" value="12.5"></td>
+        <td class="scoreCell"><input class="weight" type="number" min="0" max="100" data-w="5" value="12.5"></td>
+        <td class="scoreCell"><input class="weight" type="number" min="0" max="100" data-w="6" value="12.5"></td>
+        <td class="scoreCell"><input class="weight" type="number" min="0" max="100" data-w="7" value="12.5"></td>
+        <td></td><td></td>
+      </tr>
+    </thead>
+    <tbody id="matrixBody"></tbody>
+  </table>
+  </div>
+  <div class="toolbar" style="margin-top: 14px;">
+    <input type="text" id="newVendor" placeholder="Add vendor name" style="max-width: 240px;">
+    <input type="text" id="newNotes" placeholder="Notes (optional)" style="max-width: 240px;">
+    <button onclick="addVendor()">Add vendor</button>
+    <span style="font-size: 12px; color: var(--mute);">Up to 5 vendors. Build option is always the last row.</span>
+  </div>
+  <div class="formula">
+    <b>Weighted total</b> = Σ (criterion score × weight%) / 100, on a 1-5 scale. Weights auto-normalize on chart and verdict — input row warns when they don't sum to 100%.
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>3. Comparative scores</h2>
+    <div class="chart-wrap">
+      <canvas id="chart"></canvas>
+    </div>
+    <p style="font-size: 12px; color: var(--mute); margin-top: 10px;">Horizontal bar = weighted total (normalized). Build option in purple. Sort: highest first.</p>
+  </div>
+  <div class="card">
+    <h2>4. Build-vs-buy verdict</h2>
+    <div id="decision" class="decision">
+      <h3>Recommended option</h3>
+      <div class="winner" id="winnerName">—</div>
+      <div class="why" id="winnerWhy">Add vendors and score them to see a verdict.</div>
+    </div>
+    <div class="disclaimer">
+      <b>Directional only.</b> This scoring is a decision aid, not a substitute for legal review, security architecture review, vendor reference calls, or a paid proof-of-concept. A 4.5 here does not mean "sign the contract" — it means "do the deep dive on this one first."
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>How to read this</h2>
+  <table>
+    <thead><tr><th style="width:160px">Pattern</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td><b style="color:var(--good)">Buy wins by &gt; 0.5</b></td><td>The vendor edge is real. Build only if you have a strategic reason (proprietary data moat, regulatory mandate, core differentiation). Otherwise buy and redirect engineering to differentiation.</td></tr>
+      <tr><td><b style="color:var(--mid)">Buy wins by &lt; 0.3</b></td><td>Inside the noise. Decide on non-numeric factors: vendor relationship, exit strategy, team appetite. Run a paid POC on top two before signing.</td></tr>
+      <tr><td><b style="color:var(--t5d)">Build wins</b></td><td>Either no vendor fits your data/compliance posture, or capability fit is so high on your build that vendor delta isn't worth the lock-in. Validate that your build TCO score is honest — most internal builds underestimate by 2-3x.</td></tr>
+      <tr><td><b style="color:var(--bad)">All options &lt; 3.0</b></td><td>Market isn't ready. Defer decision; revisit in 6 months. Don't force a bad choice because a slide deadline says you must "have an AI strategy."</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size: 13px; color: var(--mute); margin-top: 14px;">
+    <b>Companion artifacts:</b> <a href="portfolio-worksheet.html">portfolio worksheet</a> · <a href="readiness-scorecard.html">readiness scorecard</a> · <a href="ai-strategy-framework.md">strategy framework</a> · <a href="executive-briefing.html">executive briefing</a> · <a href="case-study-library.html">case study library</a>
+  </p>
+</div>
+
+</div>
+
+<footer class="cc">© gmanch94 · CC-BY-4.0 · github.com/gmanch94/ai-architect-showcase · Scoring is directional — not a substitute for legal, security, or procurement review.</footer>
+
+<script>
+const CRITERIA = ['Capability fit', 'Data control', 'Deployment', '3-yr TCO', 'Lock-in', 'Security', 'Compliance', 'Roadmap'];
+
+const PRESETS = {
+  copilot: {
+    label: 'GenAI Copilot for knowledge workers',
+    vendors: [
+      { name: 'Microsoft 365 Copilot', notes: 'M365-native, EntraID', scores: [4,4,3,3,2,5,4,4] },
+      { name: 'Google Gemini for Workspace', notes: 'Workspace-native', scores: [4,4,3,3,2,5,4,4] },
+      { name: 'Anthropic Claude Enterprise', notes: 'Strong reasoning, no-train default', scores: [4,5,3,3,4,4,4,5] },
+      { name: 'Glean', notes: 'Enterprise search + assistant', scores: [4,4,4,3,3,4,3,4] },
+    ],
+    build: { name: 'Internal build (RAG over M365 + LLM API)', notes: 'Engineering-led', scores: [3,5,5,2,5,3,3,3] }
+  },
+  support: {
+    label: 'Customer support agent',
+    vendors: [
+      { name: 'Sierra', notes: 'Voice + chat agent platform', scores: [4,3,2,3,2,4,3,4] },
+      { name: 'Decagon', notes: 'AI support agents, mid-market+', scores: [4,3,2,3,2,4,3,4] },
+      { name: 'Ada', notes: 'Mature chatbot + agent', scores: [4,4,3,4,3,5,4,3] },
+      { name: 'Salesforce Agentforce', notes: 'Native to Service Cloud', scores: [4,4,3,3,1,5,4,4] },
+    ],
+    build: { name: 'Internal build (LangGraph / LlamaIndex + LLM)', notes: 'Custom orchestration', scores: [3,5,5,2,5,3,3,2] }
+  },
+  codegen: {
+    label: 'Code generation',
+    vendors: [
+      { name: 'GitHub Copilot', notes: 'GitHub-native, broad IDE support', scores: [4,4,3,4,2,5,4,5] },
+      { name: 'Cursor', notes: 'IDE-first, agentic edits', scores: [5,3,2,3,2,3,3,5] },
+      { name: 'Anthropic Claude Code', notes: 'Terminal + IDE agent', scores: [5,5,3,3,4,4,4,5] },
+      { name: 'Cody (Sourcegraph)', notes: 'Code-search-grounded', scores: [4,4,4,3,4,4,4,3] },
+    ],
+    build: { name: 'Internal build (Continue / open-source + self-host LLM)', notes: 'Self-hosted', scores: [3,5,5,3,5,3,3,2] }
+  }
+};
+
+let vendors = [];
+let buildOpt = null;
+let weights = [12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5];
+let chart = null;
+
+function normWeights() {
+  const sum = weights.reduce((a, b) => a + b, 0);
+  if (sum === 0) return weights.map(() => 1 / weights.length);
+  return weights.map(w => w / sum);
+}
+
+function weightedTotal(scores) {
+  const nw = normWeights();
+  return scores.reduce((acc, s, i) => acc + s * nw[i], 0);
+}
+
+function colorForTotal(t) {
+  if (t >= 4.0) return 'var(--good)';
+  if (t >= 3.0) return 'var(--mid)';
+  return 'var(--bad)';
+}
+
+function rowHtml(v, idx, isBuild) {
+  const total = weightedTotal(v.scores);
+  const cls = isBuild ? 'build-row' : '';
+  const idAttr = isBuild ? 'data-build="1"' : `data-i="${idx}"`;
+  const cells = v.scores.map((s, ci) => `
+    <td class="scoreCell">
+      <select onchange="updateScore(${isBuild ? -1 : idx}, ${ci}, this.value)">
+        ${[1,2,3,4,5].map(n => `<option value="${n}" ${n===s?'selected':''}>${n}</option>`).join('')}
+      </select>
+    </td>`).join('');
+  const delBtn = isBuild ? '' : `<button class="del" onclick="delVendor(${idx})">remove</button>`;
+  return `
+    <tr class="${cls}" ${idAttr}>
+      <td>
+        <input type="text" value="${v.name.replace(/"/g,'&quot;')}" onchange="updateName(${isBuild ? -1 : idx}, this.value)">
+        <div style="font-size:11px; color:var(--mute); margin-top:3px;">${v.notes || ''}</div>
+      </td>
+      ${cells}
+      <td class="totalCell" style="color:${colorForTotal(total)}">${total.toFixed(2)}</td>
+      <td>${delBtn}</td>
+    </tr>`;
+}
+
+function render() {
+  const body = document.getElementById('matrixBody');
+  let html = '';
+  if (vendors.length === 0 && !buildOpt) {
+    html = '<tr><td colspan="11" class="empty">No vendors yet. Pick a preset above or add one manually.</td></tr>';
+  } else {
+    html = vendors.map((v, i) => rowHtml(v, i, false)).join('');
+    if (buildOpt) html += rowHtml(buildOpt, -1, true);
+  }
+  body.innerHTML = html;
+  updateWeightStatus();
+  drawChart();
+  updateVerdict();
+}
+
+function updateWeightStatus() {
+  const sum = weights.reduce((a, b) => a + b, 0);
+  const el = document.getElementById('weightStatus');
+  if (Math.abs(sum - 100) < 0.5) {
+    el.innerHTML = `<span class="weight-ok">Σ = ${sum.toFixed(1)}%</span>`;
+  } else {
+    el.innerHTML = `<span class="weight-warn">Σ = ${sum.toFixed(1)}% (auto-normalized)</span>`;
+  }
+}
+
+function updateScore(idx, ci, val) {
+  const v = idx === -1 ? buildOpt : vendors[idx];
+  v.scores[ci] = +val;
+  render();
+}
+
+function updateName(idx, val) {
+  const v = idx === -1 ? buildOpt : vendors[idx];
+  v.name = val;
+  drawChart();
+  updateVerdict();
+}
+
+function addVendor() {
+  if (vendors.length >= 5) { alert('Max 5 vendors. Remove one first.'); return; }
+  const name = document.getElementById('newVendor').value.trim();
+  if (!name) { alert('Add a vendor name'); return; }
+  const notes = document.getElementById('newNotes').value.trim();
+  vendors.push({ name, notes, scores: [3,3,3,3,3,3,3,3] });
+  document.getElementById('newVendor').value = '';
+  document.getElementById('newNotes').value = '';
+  if (!buildOpt) buildOpt = { name: 'Internal build', notes: 'Your build option', scores: [3,3,3,3,3,3,3,3] };
+  render();
+}
+
+function delVendor(i) {
+  vendors.splice(i, 1);
+  render();
+}
+
+function loadPreset() {
+  const key = document.getElementById('preset').value;
+  if (!key || !PRESETS[key]) return;
+  const p = PRESETS[key];
+  vendors = JSON.parse(JSON.stringify(p.vendors));
+  buildOpt = JSON.parse(JSON.stringify(p.build));
+  render();
+}
+
+function resetBlank() {
+  vendors = [];
+  buildOpt = null;
+  document.getElementById('preset').value = '';
+  render();
+}
+
+function resetWeights() {
+  weights = [12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5, 12.5];
+  document.querySelectorAll('input.weight').forEach((el, i) => el.value = weights[i]);
+  render();
+}
+
+document.querySelectorAll('input.weight').forEach(el => {
+  el.addEventListener('input', () => {
+    const i = +el.dataset.w;
+    weights[i] = +el.value || 0;
+    render();
+  });
+});
+
+function drawChart() {
+  const ctx = document.getElementById('chart').getContext('2d');
+  if (chart) chart.destroy();
+  const all = [...vendors.map(v => ({...v, build: false})), ...(buildOpt ? [{...buildOpt, build: true}] : [])];
+  if (all.length === 0) return;
+  const ranked = all.map(v => ({ name: v.name, total: weightedTotal(v.scores), build: v.build }))
+                    .sort((a, b) => b.total - a.total);
+  chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ranked.map(r => r.name),
+      datasets: [{
+        data: ranked.map(r => r.total),
+        backgroundColor: ranked.map(r => r.build ? '#9C27B0cc' : (r.total >= 4 ? '#2E7D32cc' : r.total >= 3 ? '#E65100cc' : '#c62828cc')),
+        borderColor: ranked.map(r => r.build ? '#6A1B9A' : (r.total >= 4 ? '#1B5E20' : r.total >= 3 ? '#BF360C' : '#8E0000')),
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (c) => `Weighted total: ${c.raw.toFixed(2)} / 5${ranked[c.dataIndex].build ? ' (Build)' : ''}` } }
+      },
+      scales: {
+        x: { min: 0, max: 5, title: { display: true, text: 'Weighted total (1-5)' } },
+        y: { ticks: { font: { size: 12 } } }
+      }
+    }
+  });
+}
+
+function updateVerdict() {
+  const all = [...vendors.map(v => ({...v, build: false})), ...(buildOpt ? [{...buildOpt, build: true}] : [])];
+  const nameEl = document.getElementById('winnerName');
+  const whyEl = document.getElementById('winnerWhy');
+  if (all.length === 0) {
+    nameEl.textContent = '—';
+    whyEl.textContent = 'Add vendors and score them to see a verdict.';
+    return;
+  }
+  const ranked = all.map(v => ({ ...v, total: weightedTotal(v.scores) })).sort((a, b) => b.total - a.total);
+  const win = ranked[0];
+  const runner = ranked[1];
+  nameEl.textContent = `${win.name} — ${win.total.toFixed(2)} / 5`;
+  let why;
+  if (ranked.length === 1) {
+    why = `Only option scored. Score ${win.total.toFixed(2)} — ${win.total >= 4 ? 'strong fit; proceed to deep-dive' : win.total >= 3 ? 'viable; identify and remediate gaps before commitment' : 'weak fit; reconsider before proceeding'}.`;
+  } else {
+    const delta = win.total - runner.total;
+    const buyVsBuild = win.build ? 'Build wins' : 'Buy wins';
+    const topCrit = topCriterion(win, runner);
+    if (delta < 0.3) {
+      why = `${buyVsBuild} by only ${delta.toFixed(2)} over ${runner.name} — inside the noise. Run a paid POC on both before signing. Top discriminator: ${topCrit}.`;
+    } else if (delta < 0.5) {
+      why = `${buyVsBuild} by ${delta.toFixed(2)} over ${runner.name}. Validate the top discriminator (${topCrit}) on a paid POC before committing.`;
+    } else {
+      why = `${buyVsBuild} by ${delta.toFixed(2)} over ${runner.name} — clear margin. Top discriminator: ${topCrit}. Proceed to contract / architecture review.`;
+    }
+  }
+  whyEl.textContent = why;
+}
+
+function topCriterion(a, b) {
+  const nw = normWeights();
+  let bestIdx = 0, bestDelta = -Infinity;
+  for (let i = 0; i < CRITERIA.length; i++) {
+    const d = (a.scores[i] - b.scores[i]) * nw[i];
+    if (d > bestDelta) { bestDelta = d; bestIdx = i; }
+  }
+  return CRITERIA[bestIdx];
+}
+
+// Bootstrap with copilot preset
+document.getElementById('preset').value = 'copilot';
+loadPreset();
+</script>
+</body>
+</html>

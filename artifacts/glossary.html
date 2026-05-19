@@ -6,6 +6,7 @@
 <style>
   :root {
     --m1: #2196F3; --m2: #4CAF50; --m3: #FF9800; --m5: #9C27B0;
+    --m6: #009688; --m7: #E53935;
     --m1-dk: #1565C0; --m2-dk: #2E7D32; --m3-dk: #E65100; --m5-dk: #6A1B9A;
     --bg: #fafafa; --fg: #222; --muted: #666; --card: #fff;
   }
@@ -23,6 +24,8 @@
   .filter-btn[data-mod="2"].active { background: var(--m2); border-color: var(--m2); }
   .filter-btn[data-mod="3"].active { background: var(--m3); border-color: var(--m3); }
   .filter-btn[data-mod="5"].active { background: var(--m5); border-color: var(--m5); }
+  .filter-btn[data-mod="6"].active { background: var(--m6); border-color: var(--m6); }
+  .filter-btn[data-mod="7"].active { background: var(--m7); border-color: var(--m7); }
   main { padding: 24px 32px; max-width: 1100px; margin: 0 auto; }
   .term-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
   .term { background: var(--card); border-radius: 8px; padding: 18px; border-left: 4px solid; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
@@ -30,12 +33,16 @@
   .term[data-mod="2"] { border-left-color: var(--m2); }
   .term[data-mod="3"] { border-left-color: var(--m3); }
   .term[data-mod="5"] { border-left-color: var(--m5); }
+  .term[data-mod="6"] { border-left-color: var(--m6); }
+  .term[data-mod="7"] { border-left-color: var(--m7); }
   .term h3 { margin: 0 0 4px; font-size: 16px; }
   .term .mod-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; color: white; margin-bottom: 8px; }
   .term[data-mod="1"] .mod-tag { background: var(--m1); }
   .term[data-mod="2"] .mod-tag { background: var(--m2); }
   .term[data-mod="3"] .mod-tag { background: var(--m3); }
   .term[data-mod="5"] .mod-tag { background: var(--m5); }
+  .term[data-mod="6"] .mod-tag { background: var(--m6); }
+  .term[data-mod="7"] .mod-tag { background: var(--m7); }
   .term .plain { font-size: 14px; color: var(--fg); margin: 6px 0; }
   .term .when { font-size: 12px; color: var(--muted); border-top: 1px dashed #eee; margin-top: 10px; padding-top: 8px; }
   .term .when strong { color: var(--fg); }
@@ -47,7 +54,7 @@
 <body>
 <header>
   <h1>AI — Plain-English Glossary</h1>
-  <p>50+ AI terms in business language, tagged by topic. For non-technical leaders.</p>
+  <p>65+ AI terms in business language, tagged by topic. For non-technical leaders. Updated 2026-05.</p>
 </header>
 <div class="controls">
   <input id="search" type="search" placeholder="Search terms (e.g. 'overfit', 'RAG', 'token')…">
@@ -56,6 +63,8 @@
   <button class="filter-btn" data-mod="2">ML</button>
   <button class="filter-btn" data-mod="3">NLP</button>
   <button class="filter-btn" data-mod="5">GenAI</button>
+  <button class="filter-btn" data-mod="6">Agents</button>
+  <button class="filter-btn" data-mod="7">Governance &amp; Safety</button>
 </div>
 <main>
   <div id="grid" class="term-grid"></div>
@@ -84,7 +93,7 @@ const TERMS = [
   { t: "Random Forest", m: 2, p: "Many decision trees, each on a random data slice, voting together. Very common, very strong on tabular data.", w: "Strong default beyond logistic regression for structured business data." },
   { t: "Neural Network", m: 2, p: "Layers of mathematical 'neurons' that transform inputs into outputs. The architecture behind deep learning.", w: "When working with unstructured data or complex non-linear patterns." },
   { t: "Hidden Layer", m: 2, p: "The middle layers in a neural net — between input and output. 'Deep' = many hidden layers.", w: "When discussing model complexity or interpretability concerns." },
-  { t: "Weight / Parameter", m: 2, p: "The learned numbers inside a model. Training = finding the best weights. GPT-4 has ~1 trillion of them.", w: "When discussing model size or training cost." },
+  { t: "Weight / Parameter", m: 2, p: "The learned numbers inside a model. Training = finding the best weights. Frontier models in 2026 run from ~70B (open-weight) to multi-trillion (closed frontier).", w: "When discussing model size, training cost, or open- vs closed-weight tradeoffs." },
   { t: "Training Data", m: 2, p: "The examples the model learns from.", w: "When defining what data goes into model creation (vs. validation/test)." },
   { t: "Test Data", m: 2, p: "Held-out examples used to measure how well the model generalizes.", w: "When evaluating performance — never test on training data." },
   { t: "Overfitting", m: 2, p: "Model memorizes training data instead of learning the pattern. Looks great in training, fails in production.", w: "When training accuracy is much higher than test accuracy — red flag." },
@@ -113,7 +122,7 @@ const TERMS = [
 
   // Generative AI
   { t: "Generative AI (GenAI)", m: 5, p: "AI that creates new content (text, images, audio, code) by learning patterns from training data.", w: "When the system's job is to produce something, not just classify or score." },
-  { t: "Large Language Model (LLM)", m: 5, p: "A neural network trained on huge text corpora to predict the next token. GPT-4, Claude, Gemini, Llama are LLMs.", w: "When the modality is text and you want general-purpose language capability." },
+  { t: "Large Language Model (LLM)", m: 5, p: "A neural network trained on huge text corpora to predict the next token. GPT-5, Claude Opus/Sonnet, Gemini, Llama, DeepSeek are current LLMs.", w: "When the modality is text and you want general-purpose language capability." },
   { t: "Token", m: 5, p: "The unit of text an LLM processes — roughly a word or sub-word. Pricing and length limits are per token.", w: "When budgeting LLM API cost or hitting context-window limits." },
   { t: "Hallucination", m: 5, p: "Model confidently generates false information. Comes from token-completion approach with no fact-grounding.", w: "When deploying LLMs in any high-stakes context — assume it will happen." },
   { t: "Prompt", m: 5, p: "The instruction you give an LLM. Includes the task, context, examples, and constraints.", w: "When operating an LLM — your prompt is your code." },
@@ -126,10 +135,29 @@ const TERMS = [
   { t: "Fine-Tuning", m: 5, p: "Continue training a foundation model on your domain data so it absorbs your style/knowledge.", w: "When you have lots of high-quality examples and prompt engineering isn't enough." },
   { t: "RAG (Retrieval-Augmented Generation)", m: 5, p: "Look up relevant snippets from your knowledge base, paste them into the prompt, ask the LLM to answer based on them.", w: "When the model needs fresh, factual, or proprietary info. First choice before fine-tuning." },
   { t: "Vector Database", m: 5, p: "A database optimized for similarity search on embeddings. The retrieval engine for RAG. (Pinecone, Weaviate, pgvector.)", w: "When implementing RAG at scale." },
-  { t: "Context Window", m: 5, p: "How much text (in tokens) an LLM can read in one prompt. GPT-4 ~128K, Claude ~200K, some models 1M+.", w: "When designing prompts that include long documents." },
+  { t: "Context Window", m: 5, p: "How much text (in tokens) an LLM can read in one prompt. Frontier models in 2026 commonly span 200K–2M tokens; Gemini and Claude both ship 1M+ tiers.", w: "When designing prompts with long documents — but recall accuracy degrades past ~60% fill." },
   { t: "RLHF (Reinforcement Learning from Human Feedback)", m: 5, p: "Humans rank model outputs; the model learns to prefer better answers. How ChatGPT was trained to be helpful.", w: "When discussing why some models feel more aligned than others." },
-  { t: "Agent", m: 5, p: "An LLM that uses tools (search, code, APIs) and acts in multiple steps to achieve a goal.", w: "When the task requires more than one model call — research, multi-step workflows." },
-  { t: "Open-Source Model", m: 5, p: "A foundation model whose weights are downloadable (Llama, Mistral, DeepSeek). You can self-host.", w: "When data residency, cost, or customization rule out API-only models." }
+  { t: "Agent", m: 5, p: "An LLM that uses tools (search, code, APIs) and acts in multiple steps to achieve a goal. See also Agentic AI.", w: "When the task requires more than one model call — research, multi-step workflows." },
+  { t: "Open-Source Model", m: 5, p: "A foundation model whose weights are downloadable (Llama, Mistral, DeepSeek, Qwen). You can self-host.", w: "When data residency, cost, or customization rule out API-only models." },
+  { t: "Distillation", m: 5, p: "Train a small 'student' model to mimic a large 'teacher' model's outputs. Yields cheaper, faster models at modest quality loss.", w: "When inference cost or latency rules out the frontier model but you have its outputs to learn from." },
+  { t: "Test-Time Compute / Reasoning Models", m: 5, p: "Models that 'think longer' before answering — spending more compute at inference to plan, reflect, and self-correct. OpenAI o-series, Claude extended thinking, DeepSeek-R1.", w: "On hard reasoning, math, code, or planning tasks where quality matters more than latency." },
+  { t: "Vibe Coding", m: 5, p: "Coined by Andrej Karpathy in 2025 — building software by describing intent to an AI and accepting most generated code without close review. Productive for prototypes, risky for production.", w: "When prototyping fast; flag it explicitly when used on anything customer-facing or security-sensitive." },
+  { t: "Context Engineering", m: 5, p: "The discipline of curating what goes into an LLM's context window — instructions, examples, retrieved docs, tool outputs, memory. The 2026 successor framing to 'prompt engineering'.", w: "When LLM output quality is bottlenecked by what the model can see, not how it's asked." },
+
+  // Agents
+  { t: "Agentic AI / AI Agents", m: 6, p: "AI systems that plan, take actions across tools, and pursue multi-step goals with limited human oversight. The 2025–2026 industry frame; goes beyond single-turn chat.", w: "When discussing automation of knowledge work, not just content generation." },
+  { t: "MCP (Model Context Protocol)", m: 6, p: "An open protocol introduced by Anthropic in late 2024 that standardizes how LLM apps connect to tools, data sources, and other services. The 'USB-C of AI integrations'.", w: "When evaluating how an AI platform plugs into your existing systems — ask if it speaks MCP." },
+  { t: "Tool Use / Function Calling", m: 6, p: "An LLM emits a structured request to call an external function (search, DB query, send email); the app runs it and returns the result for the model to continue.", w: "When the model needs live data, deterministic actions, or to trigger workflows it can't do in text alone." },
+  { t: "Multi-Agent Systems", m: 6, p: "Multiple specialized AI agents (e.g. planner, researcher, coder, critic) collaborating to solve a task. Coordination overhead can outweigh gains on simpler problems.", w: "On complex, decomposable tasks; start with one strong agent before reaching for many." },
+  { t: "Computer Use", m: 6, p: "An agent capability where the model directly controls a desktop or browser — moves the mouse, types, reads the screen. Shipped by Anthropic (Oct 2024) and OpenAI Operator (2025).", w: "When automation must work against legacy UIs with no API; expect slower and more error-prone than API-based tools." },
+
+  // Governance & Safety
+  { t: "EU AI Act Risk Tiers", m: 7, p: "The EU AI Act (in force 2024, phased through 2027) sorts AI uses into four tiers: unacceptable (banned — social scoring, manipulative AI), high (strict obligations — hiring, credit, critical infra), limited (transparency only — chatbots), minimal (free use).", w: "When scoping any AI deployment touching EU users or markets — tier dictates legal burden." },
+  { t: "AI Sovereignty / Sovereign AI", m: 7, p: "A nation or bloc building domestic capacity — models, compute, data — to reduce dependence on foreign AI providers. Driver behind EU, UAE, India, France initiatives.", w: "When discussing geopolitical risk, data residency mandates, or government procurement criteria." },
+  { t: "Evals / Model Evaluation", m: 7, p: "Structured tests measuring an AI system's accuracy, safety, bias, or task performance. Public benchmarks (MMLU, SWE-bench) plus your own task-specific evals.", w: "Before deploying any LLM feature — and continuously after. If you can't measure it, you can't ship it safely." },
+  { t: "Guardrails", m: 7, p: "Runtime checks that filter or block unsafe AI inputs and outputs — PII leaks, jailbreaks, off-topic responses, toxic content. Distinct from training-time alignment.", w: "On any user-facing LLM product; treat as defense-in-depth, not a substitute for evals." },
+  { t: "Constitutional AI", m: 7, p: "An alignment method (Anthropic) where the model is trained to critique and revise its own outputs against a written set of principles, reducing the need for human-labeled harm examples.", w: "When discussing why some models refuse cleanly vs. produce harmful content — it's a training-method choice." },
+  { t: "Prompt Injection", m: 7, p: "An attack where adversarial instructions hidden in user input, web pages, or documents hijack an LLM's behavior — exfiltrating data, calling tools maliciously, overriding the system prompt.", w: "On any agent or RAG system that ingests untrusted text; the #1 LLM security risk per OWASP." }
 ];
 
 const grid = document.getElementById('grid');
@@ -151,7 +179,7 @@ function render() {
       const div = document.createElement('div');
       div.className = 'term';
       div.dataset.mod = term.m;
-      const modName = {1:'Foundations', 2:'ML Methods', 3:'NLP', 5:'GenAI'}[term.m];
+      const modName = {1:'Foundations', 2:'ML Methods', 3:'NLP', 5:'GenAI', 6:'Agents', 7:'Governance & Safety'}[term.m];
       div.innerHTML = `
         <h3>${term.t}</h3>
         <span class="mod-tag">${modName}</span>

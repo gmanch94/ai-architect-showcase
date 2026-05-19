@@ -120,33 +120,35 @@
 
 <div class="slide light t5">
   <span class="badge">Generative AI</span>
-  <h2>Productivity Impact</h2>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;">
+  <h2>Productivity Impact — what 2025 measurements show</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin-top:8px;">
     <div>
-      <div class="stat t5">80%</div>
-      <p>of US workforce will see ≥ 10% of tasks affected by LLMs</p>
+      <div class="stat t5" style="font-size:72px;">88%</div>
+      <p>of companies use AI regularly in ≥ 1 function. 72% use GenAI (vs. 33% in 2024).<br><em>McKinsey State of AI 2025</em></p>
     </div>
     <div>
-      <div class="stat t5">19%</div>
-      <p>will see ≥ 50% of their tasks impacted</p>
+      <div class="stat t5" style="font-size:72px;">26%</div>
+      <p>more pull requests completed by developers using GitHub Copilot. Support agents resolved 15% more issues/hr.<br><em>Stanford AI Index 2025</em></p>
     </div>
   </div>
-  <p style="margin-top:24px;"><strong>Most exposed groups:</strong> legal, scientists, architects, engineers, tech workers, managers. Translation: knowledge work, including yours.</p>
-  <div class="footer"><span>Eloundou, Manning, Mishkin, Rock 2023 · <em>GPTs are GPTs</em> · arXiv:2303.10130</span><span>Slide 6 / 10</span></div>
+  <p style="margin-top:18px;font-size:19px;"><strong>Failure mode to name:</strong> only ~6% of firms (McKinsey "AI high performers") capture ≥ 5% EBIT impact. 23% are scaling agents; 39% only experimenting. Adoption ≠ value. The gap is governance, evals, and workflow redesign — not model choice.</p>
+  <div class="footer"><span>McKinsey State of AI Nov 2025 · Stanford HAI AI Index 2025 · Microsoft Work Trend Index 2025 (82% plan digital labor in 12–18mo)</span><span>Slide 6 / 10</span></div>
 </div>
 
 <div class="slide dark t5">
   <span class="badge">GenAI Stack</span>
-  <h2>The 4-layer GenAI stack</h2>
+  <h2>The 6-layer GenAI stack (2025–2026)</h2>
   <table>
-    <tr><th>Layer</th><th>Players</th><th>Your move</th></tr>
-    <tr><td>4. Applications</td><td>Copilot, Cursor, Notion AI, Sudowrite</td><td><strong>Default play for most</strong></td></tr>
-    <tr><td>3. Fine-tuned models</td><td>RAG systems, BloombergGPT, Med-PaLM</td><td>If you have proprietary data</td></tr>
-    <tr><td>2. Foundation models</td><td>OpenAI, Anthropic, Google, Meta</td><td>Buy via API. Use ≥ 2 providers.</td></tr>
-    <tr><td>1. Compute infrastructure</td><td>Nvidia, TSMC, AWS / Azure / GCP</td><td>Buy from hyperscaler</td></tr>
+    <tr><th>Layer</th><th>Players / tech</th><th>Your move</th></tr>
+    <tr><td>6. Agents &amp; orchestration</td><td>LangGraph, CrewAI, AutoGen, Claude Agent SDK</td><td>Pilot 1 agent in days 30–60; require evals + human checkpoints</td></tr>
+    <tr><td>5. Applications</td><td>Copilot, Cursor, Glean, Harvey, Notion AI</td><td><strong>Default buy for most workflows</strong></td></tr>
+    <tr><td>4. Tool use / MCP</td><td>Model Context Protocol, function calling, A2A</td><td>Standardize on MCP to avoid lock-in</td></tr>
+    <tr><td>3. Fine-tuning / distillation / RAG</td><td>LoRA, vector DBs (Pinecone, pgvector)</td><td>RAG first; fine-tune only when style/format demands</td></tr>
+    <tr><td>2. Foundation models</td><td>OpenAI, Anthropic, Google, Meta, Mistral, DeepSeek</td><td>API access, ≥ 2 providers, abstraction layer</td></tr>
+    <tr><td>1. Compute infrastructure</td><td>Nvidia/AMD, TSMC, AWS / Azure / GCP / CoreWeave</td><td>Buy from hyperscaler; do not self-host GPUs</td></tr>
   </table>
-  <p style="margin-top:20px; color:#aaa;"><em>Industry observation: the infra layer wins regardless of which AI applications succeed — pick-and-shovel economics.</em></p>
-  <div class="footer"><span>GenAI stack architecture</span><span>Slide 7 / 10</span></div>
+  <p style="margin-top:14px; color:#aaa;font-size:18px;"><em>Shift since 2024: tool use + agents are now separate layers. MCP (Anthropic, Nov 2024) is emerging as the tool-integration standard. Failure mode: skipping evals at layers 5–6 ships hallucinations into production.</em></p>
+  <div class="footer"><span>GenAI stack 2025 · MCP spec · McKinsey Nov 2025 (23% scaling agents)</span><span>Slide 7 / 10</span></div>
 </div>
 
 <div class="slide light t5">
@@ -189,14 +191,14 @@
 </div>
 
 <div class="slide light">
-  <h2>Your 90-day activation plan</h2>
+  <h2>Your 90-day activation plan (2026 edition)</h2>
   <ul>
-    <li><strong>Weeks 0–2:</strong> Inventory existing AI use (incl. shadow IT). Map to GenAI stack layers.</li>
-    <li><strong>Weeks 2–4:</strong> Run readiness scorecard. Identify top 3 capability gaps.</li>
-    <li><strong>Weeks 4–8:</strong> Ship 1–3 productivity wins (assistant rollouts) for fast credibility.</li>
-    <li><strong>Weeks 6–10:</strong> Publish prompt cookbook + risk checklist company-wide.</li>
-    <li><strong>Weeks 8–12:</strong> Stand up AI literacy program (mindmap + glossary as teaching aids).</li>
-    <li><strong>Weeks 10–12:</strong> Charter 2–3 H2 workflow automation projects with executive sponsors.</li>
+    <li><strong>Week 1:</strong> Charter AI governance committee (Legal, Security, HR, Data, business sponsor). Single accountable owner. Inventory shadow-IT AI use.</li>
+    <li><strong>Weeks 2–4:</strong> Run readiness scorecard. EU AI Act gap check (GPAI obligations live 2 Aug 2025; high-risk system rules 2 Aug 2026). Map shadow IT to stack layers.</li>
+    <li><strong>Weeks 4–6:</strong> Stand up eval harness BEFORE any production rollout. Define accuracy / hallucination / bias thresholds per use case. No evals → no deploy.</li>
+    <li><strong>Weeks 4–8:</strong> Ship 1–3 assistant rollouts (Copilot-class) for fast credibility — measurable on PR throughput, ticket resolution, or doc cycle time.</li>
+    <li><strong>Weeks 6–10:</strong> Publish prompt cookbook, risk checklist, NIST AI RMF mapping. AI literacy program (mindmap + glossary).</li>
+    <li><strong>Weeks 8–12:</strong> Pilot ONE agentic workflow (narrow scope, human checkpoint, audit log). Charter 2–3 H2 automation projects with named sponsors and kill criteria.</li>
   </ul>
   <p style="margin-top:32px;"><strong>Companion artifacts:</strong> <a href="mindmap.html">mindmap</a> · <a href="glossary.html">glossary</a> · <a href="readiness-scorecard.html">readiness scorecard</a> · <a href="portfolio-worksheet.html">portfolio worksheet</a> · <a href="case-study-library.html">case study library</a> · <a href="ai-strategy-framework.md">strategy framework</a> · <a href="hr-maturity-checklist.html">HR maturity checklist</a></p>
   <div class="footer"><span>© gmanch94 · CC-BY-4.0 · github.com/gmanch94/ai-architect-showcase</span><span>Slide 10 / 10</span></div>

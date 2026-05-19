@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Governance Self-Assessment</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root { --c1:#2196F3; --c2:#4CAF50; --c3:#FF9800; --c4:#E91E63; --c5:#9C27B0; --bg:#fafafa; --fg:#222; --muted:#666; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--fg); line-height: 1.5; }
+  header { padding: 24px 32px; background: white; border-bottom: 1px solid #eee; }
+  header h1 { margin: 0 0 6px; font-size: 24px; }
+  header p { margin: 0; color: var(--muted); font-size: 14px; }
+  main { max-width: 1200px; margin: 0 auto; padding: 24px 32px; display: grid; grid-template-columns: 1fr 420px; gap: 24px; }
+  @media (max-width: 1000px) { main { grid-template-columns: 1fr; } }
+  .dimension { background: white; padding: 18px 20px; margin-bottom: 14px; border-radius: 8px; border-left: 4px solid; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .dimension[data-d="inventory"] { border-color: var(--c1); }
+  .dimension[data-d="govern"] { border-color: var(--c2); }
+  .dimension[data-d="assess"] { border-color: var(--c3); }
+  .dimension[data-d="control"] { border-color: var(--c4); }
+  .dimension[data-d="comply"] { border-color: var(--c5); }
+  .dimension h3 { margin: 0 0 4px; font-size: 16px; }
+  .dimension .sub { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+  .question { padding: 8px 0; }
+  .question label { display: block; font-size: 13px; margin-bottom: 6px; }
+  .slider-row { display: flex; align-items: center; gap: 10px; }
+  .slider-row input[type=range] { flex: 1; accent-color: #1a237e; }
+  .slider-row .val { width: 130px; text-align: center; font-weight: 600; padding: 4px 6px; background: #f5f5f5; border-radius: 4px; font-size: 11px; }
+  .scale-key { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .panel { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); position: sticky; top: 20px; align-self: start; }
+  .panel h2 { margin: 0 0 12px; font-size: 18px; }
+  #chart-wrap { position: relative; height: 320px; }
+  .summary { margin-top: 14px; padding: 12px; background: #f9f9f9; border-radius: 6px; font-size: 13px; }
+  .summary strong { display: block; margin-bottom: 4px; color: #333; }
+  .gap-list { margin-top: 10px; }
+  .gap-list .gap { padding: 8px 10px; margin: 6px 0; border-radius: 4px; font-size: 12px; }
+  .gap.low { background: #ffebee; color: #c62828; border-left: 3px solid #c62828; }
+  .gap.med { background: #fff3e0; color: #e65100; border-left: 3px solid #ff9800; }
+  .gap.high { background: #e8f5e9; color: #2e7d32; border-left: 3px solid #4caf50; }
+  .actions { display: flex; gap: 8px; margin-top: 16px; }
+  .btn { padding: 8px 14px; border-radius: 4px; border: 0; cursor: pointer; font-size: 13px; }
+  .btn-primary { background: #333; color: white; }
+  .classifier { background: white; border-radius: 8px; padding: 20px; margin-top: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border-top: 4px solid #1a237e; }
+  .classifier h2 { margin: 0 0 6px; font-size: 18px; }
+  .classifier .lede { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .cq { padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+  .cq:last-of-type { border-bottom: 0; }
+  .cq .qtxt { font-size: 13px; margin-bottom: 6px; }
+  .cq .opts { display: flex; gap: 8px; }
+  .cq button { padding: 6px 14px; font-size: 12px; border: 1px solid #ccc; background: white; border-radius: 4px; cursor: pointer; }
+  .cq button.active { background: #1a237e; color: white; border-color: #1a237e; }
+  .verdict { margin-top: 14px; padding: 12px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; display: none; }
+  .verdict.show { display: block; }
+  .verdict.unacceptable { background: #c62828; color: white; }
+  .verdict.high { background: #ff9800; color: white; }
+  .verdict.limited { background: #ffd54f; color: #333; }
+  .verdict.minimal { background: #4caf50; color: white; }
+  .verdict small { display: block; font-weight: 400; margin-top: 4px; opacity: 0.92; }
+  footer.cc { padding: 18px 32px; text-align: center; font-size: 12px; color: var(--muted); border-top: 1px solid #eee; }
+  footer.cc a { color: #1a237e; text-decoration: none; }
+  @media print { .actions, .btn, .cq .opts { display: none; } body { background: white; } .panel { position: static; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>AI Governance Self-Assessment</h1>
+  <p>5 governance dimensions × 5 questions each, scored 0 (Not started) → 4 (Optimizing). Anchored on EU AI Act and NIST AI RMF. Live radar, gap analysis, and an EU AI Act risk-tier classifier for your primary use case.</p>
+</header>
+<main>
+
+<div class="form">
+
+<div class="dimension" data-d="inventory">
+  <h3>1. Risk Classification &amp; Inventory</h3>
+  <div class="sub">You can't govern what you can't see. Inventory + tiered classification is the foundation.</div>
+  <div class="question"><label>You maintain a registered inventory of all AI systems in use</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="inventory"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Each system is classified by EU AI Act risk tier (unacceptable / high / limited / minimal)</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="inventory"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Shadow AI usage (unsanctioned tools, BYO-LLM) is detected and tracked</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="inventory"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Third-party AI vendors are classified by risk tier and contractually bound</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="inventory"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>The inventory is reviewed at least quarterly with owners signed off</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="inventory"><span class="val">1 · Initiated</span></div></div>
+</div>
+
+<div class="dimension" data-d="govern">
+  <h3>2. Governance Structure</h3>
+  <div class="sub">NIST AI RMF · GOVERN function. Accountability, policy, escalation, board oversight.</div>
+  <div class="question"><label>A named executive is accountable for AI risk (not "the CTO informally")</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="govern"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>An AI governance committee meets at least quarterly with documented minutes</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="govern"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>There is a published AI use policy approved by legal and leadership</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="govern"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>AI incident escalation paths are documented and have been tested via tabletop</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="govern"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Board reporting on AI risk is standardized (cadence, metrics, format)</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="govern"><span class="val">1 · Initiated</span></div></div>
+</div>
+
+<div class="dimension" data-d="assess">
+  <h3>3. Risk Assessment</h3>
+  <div class="sub">NIST AI RMF · MAP + MEASURE functions. Pre-deployment evals, bias, monitoring, red-team.</div>
+  <div class="question"><label>AI risks are identified pre-deployment via a documented assessment process</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="assess"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Evaluations are run against defined criteria before production deployment</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="assess"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Bias is tested across protected classes (EEOC 4/5ths rule or equivalent)</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="assess"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Model performance metrics are monitored in production with drift alerts</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="assess"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Red-team / adversarial tests are run for high-risk systems before launch</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="assess"><span class="val">1 · Initiated</span></div></div>
+</div>
+
+<div class="dimension" data-d="control">
+  <h3>4. Risk Controls</h3>
+  <div class="sub">NIST AI RMF · MANAGE function. Guardrails, human-in-the-loop, logging, lineage, rollback.</div>
+  <div class="question"><label>Guardrails (input filtering, output validation) are deployed on production systems</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="control"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Human-in-the-loop review is required for high-risk decisions</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="control"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Model inputs and outputs are logged with retention sufficient for audit</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="control"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Data lineage is traced for training data and inference inputs</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="control"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Rollback procedures exist and have been tested within the last 12 months</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="control"><span class="val">1 · Initiated</span></div></div>
+</div>
+
+<div class="dimension" data-d="comply">
+  <h3>5. Compliance &amp; Transparency</h3>
+  <div class="sub">EU AI Act Art. 50, GDPR Art. 22, conformity assessment, regulatory-inquiry readiness.</div>
+  <div class="question"><label>AI-generated outputs are labeled where required (EU AI Act Art. 50)</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="comply"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Conformity assessment is completed for systems classified as high-risk</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="comply"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Users are informed when they are interacting with an AI system</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="comply"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Data subject rights are honored (GDPR Art. 22, automated decisions)</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="comply"><span class="val">1 · Initiated</span></div></div>
+  <div class="question"><label>Documentation is maintained at a level sufficient for regulatory inquiry</label><div class="slider-row"><input type="range" min="0" max="4" value="1" data-d="comply"><span class="val">1 · Initiated</span></div></div>
+</div>
+
+</div>
+
+<div>
+<div class="panel">
+  <h2>Your Governance Profile</h2>
+  <div id="chart-wrap"><canvas id="radar"></canvas></div>
+  <div class="summary"><strong>Overall maturity</strong><span id="overall"></span></div>
+  <div class="gap-list" id="gaps"></div>
+  <div class="actions">
+    <button class="btn btn-primary" onclick="window.print()">Print / PDF</button>
+    <button class="btn" onclick="resetAll()">Reset</button>
+  </div>
+</div>
+
+<div class="classifier">
+  <h2>EU AI Act Risk-Tier Classifier</h2>
+  <p class="lede">Answer three yes/no questions about your <em>primary</em> AI use case. Result is indicative, not legal advice — consult counsel for binding classification.</p>
+
+  <div class="cq" data-q="q1">
+    <div class="qtxt"><strong>Q1.</strong> Does the system perform social scoring, manipulative subliminal techniques, untargeted facial-image scraping, real-time biometric ID in public spaces, or emotion recognition in workplaces / schools?</div>
+    <div class="opts"><button data-v="yes">Yes</button><button data-v="no">No</button></div>
+  </div>
+
+  <div class="cq" data-q="q2">
+    <div class="qtxt"><strong>Q2.</strong> Does it make or materially inform decisions about employment, credit, insurance, education access, essential public services, law enforcement, migration, justice, or safety components of regulated products (medical devices, vehicles, critical infrastructure)?</div>
+    <div class="opts"><button data-v="yes">Yes</button><button data-v="no">No</button></div>
+  </div>
+
+  <div class="cq" data-q="q3">
+    <div class="qtxt"><strong>Q3.</strong> Does it interact directly with people (chatbot), generate or manipulate synthetic content (text, image, audio, video), or use emotion-recognition / biometric-categorization outside the unacceptable-risk scope above?</div>
+    <div class="opts"><button data-v="yes">Yes</button><button data-v="no">No</button></div>
+  </div>
+
+  <div class="verdict" id="verdict"></div>
+</div>
+</div>
+
+</main>
+
+<footer class="cc">© gmanch94 · CC-BY-4.0 · github.com/gmanch94/ai-architect-showcase · Anchored on <strong>EU AI Act (Regulation 2024/1689)</strong>, <strong>NIST AI RMF 1.0 (2023)</strong>, and <strong>NIST AI RMF Generative AI Profile (NIST-AI-600-1, 2024)</strong>. Companions: <a href="readiness-scorecard.html">readiness scorecard</a> · <a href="hr-maturity-checklist.html">HR checklist</a> · <a href="executive-briefing.html">executive briefing</a></footer>
+
+<script>
+const DIMS = ['inventory', 'govern', 'assess', 'control', 'comply'];
+const LABELS = ['Inventory', 'Governance', 'Assessment', 'Controls', 'Compliance'];
+const COLORS = ['#2196F3', '#4CAF50', '#FF9800', '#E91E63', '#9C27B0'];
+const SCALE = ['Not started', 'Initiated', 'Defined', 'Operating', 'Optimizing'];
+
+const ctx = document.getElementById('radar').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'radar',
+  data: {
+    labels: LABELS,
+    datasets: [{
+      label: 'Your Score',
+      data: [1,1,1,1,1],
+      backgroundColor: 'rgba(26, 35, 126, 0.18)',
+      borderColor: '#1a237e',
+      borderWidth: 2,
+      pointBackgroundColor: COLORS,
+      pointRadius: 5
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: { r: { suggestedMin: 0, suggestedMax: 4, ticks: { stepSize: 1, callback: v => SCALE[v] || v } } },
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.label}: ${c.parsed.r.toFixed(1)} / 4` } } }
+  }
+});
+
+document.querySelectorAll('input[type=range]').forEach(input => {
+  input.addEventListener('input', () => {
+    input.nextElementSibling.textContent = `${input.value} · ${SCALE[input.value]}`;
+    update();
+  });
+});
+
+function update() {
+  const scores = DIMS.map(d => {
+    const inputs = document.querySelectorAll(`input[data-d="${d}"]`);
+    const sum = Array.from(inputs).reduce((a,i) => a + Number(i.value), 0);
+    return sum / inputs.length;
+  });
+  chart.data.datasets[0].data = scores;
+  chart.update();
+
+  const overall = (scores.reduce((a,b)=>a+b,0) / scores.length).toFixed(2);
+  let band;
+  if (overall < 1) band = 'Not started — material regulatory exposure. Stand up inventory + named accountable executive first.';
+  else if (overall < 2) band = 'Initiated — ad hoc practice, no consistency. Pick one dimension and reach Defined before broadening.';
+  else if (overall < 3) band = 'Defined — policies exist but uneven execution. Close the weakest dimension to remove the audit blocker.';
+  else if (overall < 3.5) band = 'Operating — controls in place across dimensions. Focus on automation and evidence collection.';
+  else band = 'Optimizing — mature posture. Push into continuous assurance, third-party audit, and frontier-model controls.';
+  document.getElementById('overall').textContent = ` ${overall} / 4 — ${band}`;
+
+  const ACTIONS = {
+    'inventory': 'Stand up a system-of-record inventory this quarter. Mandate registration before any new AI deployment.',
+    'govern':    'Name an accountable executive in writing. Publish the AI use policy on the intranet within 30 days.',
+    'assess':    'Adopt a pre-deployment eval template. Block production launches without sign-off from risk + product.',
+    'control':   'Deploy output logging and guardrails on the top 3 highest-risk production systems first.',
+    'comply':    'Map your AI inventory to EU AI Act tiers. For each high-risk system, open a conformity-assessment ticket.'
+  };
+  const gaps = DIMS.map((d, i) => ({d, label: LABELS[i], score: scores[i]})).sort((a,b) => a.score - b.score);
+  const gapHtml = gaps.map(g => {
+    const cls = g.score < 1.5 ? 'low' : g.score < 2.5 ? 'med' : 'high';
+    return `<div class="gap ${cls}"><strong>${g.label}: ${g.score.toFixed(1)} / 4</strong><br>${ACTIONS[g.d]}</div>`;
+  }).join('');
+  document.getElementById('gaps').innerHTML = gapHtml;
+}
+
+function resetAll() {
+  document.querySelectorAll('input[type=range]').forEach(i => { i.value = 1; i.nextElementSibling.textContent = `1 · ${SCALE[1]}`; });
+  update();
+}
+
+update();
+
+// Risk-tier classifier
+const answers = { q1: null, q2: null, q3: null };
+document.querySelectorAll('.cq').forEach(card => {
+  const q = card.dataset.q;
+  card.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      card.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      answers[q] = btn.dataset.v;
+      renderVerdict();
+    });
+  });
+});
+
+function renderVerdict() {
+  const v = document.getElementById('verdict');
+  if (Object.values(answers).includes(null)) { v.classList.remove('show'); return; }
+  let tier, label, note;
+  if (answers.q1 === 'yes') {
+    tier = 'unacceptable'; label = 'Unacceptable risk — PROHIBITED';
+    note = 'EU AI Act Art. 5 bans this category outright (with narrow exceptions). Do not deploy in the EU. Re-scope the use case or terminate.';
+  } else if (answers.q2 === 'yes') {
+    tier = 'high'; label = 'High risk';
+    note = 'EU AI Act Annex III. Requires conformity assessment, risk management system, data governance, technical documentation, logging, transparency, human oversight, accuracy/robustness/cybersecurity, and registration in the EU database before deployment.';
+  } else if (answers.q3 === 'yes') {
+    tier = 'limited'; label = 'Limited risk';
+    note = 'EU AI Act Art. 50 transparency obligations apply: inform users they are interacting with AI, label synthetic media, disclose emotion-recognition / biometric-categorization use. Light-touch but enforceable.';
+  } else {
+    tier = 'minimal'; label = 'Minimal risk';
+    note = 'No specific EU AI Act obligations beyond voluntary codes of conduct. Apply your standard governance, security, and data-protection baseline.';
+  }
+  v.className = `verdict show ${tier}`;
+  v.innerHTML = `${label}<small>${note}</small>`;
+}
+</script>
+</body>
+</html>
