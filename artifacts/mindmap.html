@@ -115,34 +115,34 @@ const treeData = {
         }
       ]
     },
-    { name: "Generative AI", m: 5, detail: "AI that generates plausible content (text, images, audio, code). LLMs, prompt engineering, the GenAI stack, RAG vs fine-tuning. The defining commercial AI wave of the 2020s.",
+    { name: "Generative AI", m: 5, detail: "AI that generates plausible content (text, images, audio, code). LLMs, prompt engineering, the GenAI stack, RAG vs fine-tuning, agents + evals + governance. The dominant commercial AI wave through 2025-26.",
       pros: ["Massive productivity unlock for knowledge work"],
       cons: ["Hallucinations, IP risk, hard to govern"],
       children: [
-        { name: "What is GenAI", m: 5, detail: "AI that learns underlying patterns from training data and generates plausible content. Usually unstructured (text, image, audio). Distinguished from discriminative AI.", pros: ["Creates net-new artifacts"], cons: ["Plausibility ≠ accuracy"] },
-        { name: "LLMs (GPT/Claude/Llama)", m: 5, detail: "Large Language Models. GPT-3 = 175B params, GPT-4 = 1T+. Trained on CommonCrawl, Wikipedia, books. Predict next token given context.",
-          pros: ["General-purpose language interface", "Few-shot learning"],
-          cons: ["Tremendous compute cost", "Training cutoff = stale knowledge"]
+        { name: "What is GenAI", m: 5, detail: "AI that learns underlying patterns from training data and generates plausible content. Usually unstructured (text, image, audio, code). Distinguished from discriminative AI.", pros: ["Creates net-new artifacts"], cons: ["Plausibility ≠ accuracy"] },
+        { name: "LLMs (Claude/GPT/Gemini/Llama)", m: 5, detail: "Large Language Models. Current frontier classes: Anthropic Claude Sonnet/Opus, OpenAI GPT-4o + o-series reasoning, Google Gemini, Meta Llama 3+, DeepSeek. Param counts no longer published or comparable — capability now defined by post-training, reasoning, tool use.",
+          pros: ["General-purpose language interface", "Few-shot + tool use"],
+          cons: ["Compute + inference cost still material", "Training cutoff = stale knowledge"]
         },
-        { name: "How LLMs Work", m: 5, detail: "Token prediction: given 'Elephants are the ___', predict most probable next word. Iterate to generate sequences. Transformer architecture under the hood.",
+        { name: "How LLMs Work", m: 5, detail: "Token prediction: given 'Elephants are the ___', predict most probable next word. Iterate to generate sequences. Transformer architecture under the hood. Reasoning models add test-time compute (chain-of-thought as a trained behavior).",
           pros: ["Conceptually simple"],
-          cons: ["No reasoning — just probability"]
+          cons: ["Probabilistic — no guaranteed correctness"]
         },
-        { name: "Limitations", m: 5, detail: "Hallucinations from token completion. Batch training = stale. Bias and harmful content. No transparency on sources. Plagiarism + IP lawsuits.",
+        { name: "Limitations", m: 5, detail: "Hallucinations from token completion. Batch training = stale. Bias and harmful content. No transparency on sources. Plagiarism + IP lawsuits. Prompt injection on tool-using agents.",
           pros: ["Well-documented failure modes"],
           cons: ["No silver bullet — all need mitigation"]
         },
-        { name: "Productivity Impact", m: 5, detail: "Eloundou et al. 2023 (arXiv:2303.10130): 80% of US workforce will see ≥10% of tasks affected by LLMs. 19% will see ≥50% impacted. Most exposed: legal, tech, scientists, architects, managers.",
-          pros: ["Quantified impact gives planning anchor"],
-          cons: ["Task-level impact ≠ job displacement"]
+        { name: "Productivity Impact", m: 5, detail: "McKinsey State of AI 2025: ~78% of orgs use AI in at least one function (up from 55% in 2023). Stanford AI Index 2025: enterprise GenAI adoption ~71%. Microsoft Work Trend Index 2025: 75% of knowledge workers use AI at work. Measured productivity lift 10-45% in coding, support, writing.",
+          pros: ["Quantified adoption gives planning anchor"],
+          cons: ["Adoption ≠ value capture — most pilots stall pre-production"]
         },
-        { name: "GenAI Stack", m: 5, detail: "4 layers: (1) Compute infra (Nvidia, TSMC, AWS/Azure/GCP), (2) Foundation models (OpenAI, Anthropic, Google, Meta Llama), (3) Fine-tuned/customized models (RAG, fine-tuning), (4) Applications (Copilot, Sudowrite, Alltius).",
+        { name: "GenAI Stack", m: 5, detail: "6 layers (2025-26): (1) Compute infra (Nvidia, TSMC, hyperscalers), (2) Foundation models (Anthropic, OpenAI, Google, Meta, Mistral, DeepSeek), (3) Fine-tuning + RAG, (4) Applications (Copilot, Cursor, vertical apps), (5) Tool use / MCP — standardized model-to-tool protocol, (6) Agents / orchestration — multi-step planners, LangGraph, CrewAI, vendor-native.",
           pros: ["Frame for value capture analysis", "Each layer has different economics"],
-          cons: ["Boundaries blurring — providers move up/down stack"]
+          cons: ["Boundaries blurring — vendors move up/down stack"]
         },
-        { name: "Foundation Models", m: 5, detail: "Pre-trained on massive corpora. OpenAI (GPT-4), Anthropic (Claude), Google (Gemini), Meta (Llama 2/3 — open). Llama 2 70B competitive but trails GPT-4 + PaLM-2 on most benchmarks.",
-          pros: ["Open source narrowing the gap", "Cost differences large"],
-          cons: ["Vendor lock-in risk", "Capability moves fast"]
+        { name: "Foundation Models", m: 5, detail: "Pre-trained on massive corpora. Closed frontier: Anthropic (Claude), OpenAI (GPT-4o, o-series), Google (Gemini). Open weights: Meta (Llama 3+), Mistral, DeepSeek. Open weights now within ~5-10% of closed frontier on many benchmarks.",
+          pros: ["Open weights narrowing the gap", "Price-per-token down 10-100x since 2023"],
+          cons: ["Vendor lock-in risk", "Capability moves fast — quarterly refresh"]
         },
         { name: "RAG", m: 5, detail: "Retrieval Augmented Generation. Retrieve relevant snippets from a knowledge source, prepend to prompt, ask LLM to answer based on context. No model retraining needed.",
           pros: ["Cheap", "Fresh data", "Citable sources", "No retraining"],
@@ -163,6 +163,18 @@ const treeData = {
         { name: "Value Capture", m: 5, detail: "Infra wins regardless of which apps succeed (Nvidia, TSMC). Foundation models = winner-take-most? Apps differentiate via data + workflow integration.",
           pros: ["Strategic clarity for build-vs-buy"],
           cons: ["Open source erodes foundation moats"]
+        },
+        { name: "Agentic AI", m: 5, detail: "Autonomous goal-pursuit: model plans multi-step tasks, calls tools, observes results, retries. Anthropic, OpenAI, Google all shipped agent SDKs in 2024-25. Adoption climbing but production deployments still rare.",
+          pros: ["High-leverage on long-horizon tasks (research, coding, ops)", "Tool use unlocks real-world action"],
+          cons: ["Error compounds across steps", "Audit gaps — hard to reconstruct why", "Replit 2025: agent wiped prod DB despite explicit freeze instruction"]
+        },
+        { name: "Evals & Guardrails", m: 5, detail: "Pre-deploy testing (held-out eval sets, LLM-as-judge, red-team), runtime output filtering, prompt-injection defenses, PII redaction. NIST GenAI Profile (2024) names eval as a core control.",
+          pros: ["Catches regressions on model swaps", "Required for regulated deployments"],
+          cons: ["Eval coverage rarely matches production distribution", "LLM-judge bias", "Guardrails add latency + cost"]
+        },
+        { name: "Governance (EU AI Act / NIST)", m: 5, detail: "EU AI Act (Regulation 2024/1689) in force Aug 2024; prohibited uses + GPAI rules from Feb/Aug 2025; high-risk obligations from Aug 2026. NIST AI RMF 1.0 + GenAI Profile (NIST-AI-600-1, 2024) — voluntary US baseline. Risk tiers: unacceptable, high, limited, minimal.",
+          pros: ["Clear obligations for high-risk uses (HR, credit, biometrics)", "RMF maps to existing risk programs"],
+          cons: ["GPAI obligations still evolving", "Fines up to 7% global revenue", "Patchwork across US states + sectoral rules"]
         }
       ]
     }
