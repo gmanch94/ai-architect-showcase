@@ -126,6 +126,12 @@ Skip steps only with explicit agreement.
 - `/review` — code review with [BLOCKER] / [SUGGESTION] / [NITPICK] format
 - `/adr` — draft an Architecture Decision Record
 - `/retro` — retrospective; reviews recent commits; writes lessons to LESSONS_LEARNED.md
+- `/check-md` (repo-local, `.claude/skills/check-md/`) — scan tracked `.md` for stray-pipe phantom tables, guide the fix, render-verify on the published Pages HTML
+
+**Local gates** (no CI in this repo — run before shipping):
+
+- `node scripts/check-md-pipes.mjs` — stray-pipe phantom-table gate for `.md` (exit 1 on hits). Encodes `~/.claude/rules/markdown-render-gotchas.md`; wired by `/check-md`.
+- Embedded-JS parse — for HTML artifacts, parse inlined `<script>` via node `new Function()` before commit.
 
 **Permissions:** `.claude/settings.json` pre-allows safe read-only operations so they never prompt. Write/Edit/Bash remain prompt-required — add to `settings.local.json` (gitignored) for your machine.
 
