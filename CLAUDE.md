@@ -126,7 +126,7 @@ Skip steps only with explicit agreement.
 - `/review` — code review with [BLOCKER] / [SUGGESTION] / [NITPICK] format
 - `/adr` — draft an Architecture Decision Record
 - `/retro` — retrospective; reviews recent commits; writes lessons to LESSONS_LEARNED.md
-- `/check-md` (repo-local, `.claude/skills/check-md/`) — scan tracked `.md` for stray-pipe phantom tables, guide the fix, render-verify on the published Pages HTML
+- `/check-md` (global skill, `~/.claude/skills/check-md/`) — scan tracked `.md` for stray-pipe phantom tables, guide the fix, render-verify on the published Pages HTML. Runs this repo's `scripts/check-md-pipes.mjs` (below) when present.
 
 **Local gates** (no CI in this repo — run before shipping):
 
