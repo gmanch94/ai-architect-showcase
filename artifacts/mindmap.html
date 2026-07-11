@@ -120,7 +120,7 @@ const treeData = {
       cons: ["Hallucinations, IP risk, hard to govern"],
       children: [
         { name: "What is GenAI", m: 5, detail: "AI that learns underlying patterns from training data and generates plausible content. Usually unstructured (text, image, audio, code). Distinguished from discriminative AI.", pros: ["Creates net-new artifacts"], cons: ["Plausibility ≠ accuracy"] },
-        { name: "LLMs (Claude/GPT/Gemini/Llama)", m: 5, detail: "Large Language Models. Current frontier classes: Anthropic Claude Opus/Sonnet, OpenAI GPT-5 series, Google Gemini 3, xAI Grok 4, Meta Llama, DeepSeek. Param counts no longer published or comparable — capability now defined by post-training, reasoning, tool use.",
+        { name: "LLMs (Claude/GPT/Gemini/Llama)", m: 5, detail: "Large Language Models. Current frontier classes (mid-2026): Anthropic Claude Opus 4.8 / Sonnet 5, OpenAI GPT-5.6, Google Gemini 3.5, xAI Grok 4.5, Meta Llama, DeepSeek. Param counts no longer published or comparable — capability now defined by post-training, reasoning, tool use.",
           pros: ["General-purpose language interface", "Few-shot + tool use"],
           cons: ["Compute + inference cost still material", "Training cutoff = stale knowledge"]
         },
@@ -140,7 +140,7 @@ const treeData = {
           pros: ["Frame for value capture analysis", "Each layer has different economics"],
           cons: ["Boundaries blurring — vendors move up/down stack"]
         },
-        { name: "Foundation Models", m: 5, detail: "Pre-trained on massive corpora. Closed frontier: Anthropic (Claude), OpenAI (GPT-5 series), Google (Gemini), xAI (Grok). Open weights: Meta (Llama), Mistral, DeepSeek. Open weights now within ~5-10% of closed frontier on many benchmarks.",
+        { name: "Foundation Models", m: 5, detail: "Pre-trained on massive corpora. Closed frontier: Anthropic (Claude Opus 4.8/Sonnet 5), OpenAI (GPT-5.6), Google (Gemini 3.5), xAI (Grok 4.5). Open weights: Meta (Llama), Mistral, DeepSeek. Open weights now within ~5-10% of closed frontier on many benchmarks.",
           pros: ["Open weights narrowing the gap", "Price-per-token down 10-100x since 2023"],
           cons: ["Vendor lock-in risk", "Capability moves fast — quarterly refresh"]
         },
