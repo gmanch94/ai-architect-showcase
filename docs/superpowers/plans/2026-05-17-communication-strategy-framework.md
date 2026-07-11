@@ -669,7 +669,7 @@ In `README.md`, find the audience routing table (the one that starts with "You a
 
 - [ ] **Step 2: Add artifact registry row**
 
-In `README.md`, find the artifact registry table (the one with columns "Artifact | Type | What it does"). Add this row:
+In `README.md`, find the artifact registry table (the one with columns "Artifact", "Type", "What it does"). Add this row:
 
 ```markdown
 | [`communication-strategy.html`](artifacts/communication-strategy.html) | Planning tool | Select an AI initiative archetype (8 options) → edit Rider / Elephant / Path levers → get a formatted communication plan + talking points. Print to PDF or copy talking points. Based on Heath & Heath, *Switch* (2010). |
@@ -701,7 +701,7 @@ git commit -m "docs: add communication-strategy to artifact registry and audienc
 
 ## Self-Review Checklist
 
-- [x] **Spec coverage:** 8 archetypes ✓ | Split-pane layout ✓ | Archetype pre-fill ✓ | Generate Plan button ✓ | Formatted one-pager ✓ | Talking points ✓ | Copy-to-clipboard ✓ | Print-to-PDF ✓ | Keyboard nav ✓ | ARIA ✓ | No CDN ✓ | CC-BY-4.0 footer ✓ | README update ✓
+- [x] **Spec coverage:** 8 archetypes ✓ · Split-pane layout ✓ · Archetype pre-fill ✓ · Generate Plan button ✓ · Formatted one-pager ✓ · Talking points ✓ · Copy-to-clipboard ✓ · Print-to-PDF ✓ · Keyboard nav ✓ · ARIA ✓ · No CDN ✓ · CC-BY-4.0 footer ✓ · README update ✓
 - [x] **No placeholders:** All code blocks complete. No TBDs.
 - [x] **Type consistency:** `escHtml()` defined in Task 5 Step 1, called in same block. `toggleLever()` defined in Task 3, referenced in Task 2 HTML `onclick`. `generatePlan()` defined in Task 5, referenced in Task 2 HTML `onclick`. `copyTP()` defined in Task 5, referenced in Task 5 generated HTML. All consistent.
 - [x] **ID consistency:** `riderText`, `elephantText`, `pathText` defined in Task 2, read in Task 5. `riderBody`, `elephantBody`, `pathBody` defined in Task 2, toggled in Task 3. `tp-rider`, `tp-elephant`, `tp-path` generated in Task 5, read in `copyTP()`. All consistent.

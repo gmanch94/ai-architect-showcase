@@ -102,11 +102,15 @@ Path: • ... • ... • ...
 
 Add row to artifact registry table:
 
+```markdown
 | [`communication-strategy.html`](artifacts/communication-strategy.html) | Planning tool | Select an AI initiative archetype (8 options) → edit Rider / Elephant / Path levers → get a formatted communication plan + talking points. Print to PDF or copy talking points. |
+```
 
 Add audience routing row:
 
+```markdown
 | A change leader communicating an AI initiative | [`communication-strategy.html`](artifacts/communication-strategy.html) |
+```
 
 ---
 
